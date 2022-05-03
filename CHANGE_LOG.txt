@@ -1,0 +1,16 @@
+02-05-2022:
+* Add keywords to grammar file (BabyCobolTokens.g4)
+* Copy grammar from original BabyCobol paper (BabyCobolGrammar.g4)
+* Extend original grammar with divisions & paragraphs
+
+-> Achieved: Simple parsing of the fib example files as given in the paper. Doesn't parse completely yet.
+
+03-05-2022:
+* Work on identification division
+-> Encountered problem with the greedy algorithm. Always matches ~[.]+ with everything, not just the identification division.
+   -> A possible solution is to switch to a non-greedy strategy (https://github.com/antlr/antlr4/blob/master/doc/wildcard.md)
+      -> Eventually not necessary, but switched to a recursive grammar rule, which switches between arbitrary values.
+         Really not a nice implementation but it works.
+
+* Add support for quantification (FOR)
+* Ability to fully parse (without any errors) the simple fib file.
