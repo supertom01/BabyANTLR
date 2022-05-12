@@ -14,3 +14,49 @@
 
 * Add support for quantification (FOR)
 * Ability to fully parse (without any errors) the simple fib file.
+* Add labels to grammar rules with multiple RHSs.
+* Started working on a quick-and-dirty pretty-print program.
+-> Is able to expand picture representations to their proper values 2(X) -> XX and 99V9(9) -> 99V999999999
+-> For the visual effect sequence numbers are printed in the first six columns.
+-> Depth values for the data division are recalculated and increase by one each depth.
+   -> Not properly done yet... Currently the following problem persists:
+      000000 IDENTIFICATION DIVISION.
+      000001     PROGRAMID. TEST-REPRESENTATION.
+      000002 DATA DIVISION.
+      000003     1 TEST PICTURE IS 9XXXXX999.
+      000004         2 BETA LIKE TEST.
+      000005     1 OMEGA OCCURS 20 TIMES.
+      000006             3 ALPHA PICTURE IS AAAXXXXX9.
+      But 3 ALPHA ... should be one indent back, starting on the same column as 2 BETA ...
+
+04-05-2022:
+* Update the ANTLR grammar to what's available on the BabyCobol documentation site, since the paper has some mistakes
+* Set new goal: Implement a pre-processor that conducts the full lexical analysis.
+-> Attempted to write an ANTLR grammar, but for now switched to Java regex.
+
+05-05-2022:
+* Continued on column based parsing.
+-> Base regex on the COBOL preprocessor as found on the ANTLR GitHub (https://github.com/antlr/grammars-v4/blob/c270f16dc0bc30fb15f7b1aac1d2239f8512d704/cobol85/java/CobolPreprocessor.java#L34)
+
+06-05-2022:
+* Continued on column based parsing
+-> Start working on inserting continued lines in the same line.
+-> Finished column based parsing in the Java preprocessor.
+
+09-06-2022:
+* The preprocessor will communicate line numbers after the 72nd column with the sequence #![S]_[E]\r\n
+-> Where S -> First line number of the line and E -> Last number of the line (in case of line merges)
+-> Started on a custom error listener that shows correct line numbers and underlines errors.
+
+* By including the Line objects in the error listener, we do not have to provide the original line numbers in the to be parsed text.
+* Give a warning when the clean printing removes information from the A section
+
+* Found a section in the ANTLR reference p. 210 about keywords not being reserved.
+
+12-06-2022:
+* Start on implementing "keywords as identifiers" according to p. 210.
+-> Looks easy since it's just adding all keywords to the identifier rule, however. How do we fix the issue of ambiguity?
+   Since ANTLR chooses for us right?
+
+* Move atomic expressions out of normal statements.
+* PROBLEM: How do we tell the parser to choose depending on the case?!

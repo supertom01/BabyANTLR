@@ -4,23 +4,23 @@
            AUTHOR. Anonymous.
            DATE-WRITTEN. 2019-11-01.
        DATA DIVISION.
-       01 WORKING-STORAGE-AREA.
-          05 END PICTURE IS 99.
-          05 CUR PICTURE IS 9(20).
-          05 LAST.
-              09 N LIKE CUR.0
-              09 N-1 LIKE CUR.
+           01 WORKING-STORAGE-AREA.
+             05 END PICTURE IS 99.
+             05 CUR PICTURE IS 9(20).
+             05 LAST.
+               09 N LIKE CUR.
+               09 N-1 LIKE CUR.
        PROCEDURE DIVISION.
-          DISPLAY ENTER THE LIMIT
-          ACCEPT END.
-          MOVE SPACES TO cur last.
-          DISPLAY N-1.
-          SUBTRACT 1 FROM END.
-          MOVE 1 TO N.
-          PERFORM PRINT-FIB END TIMES.
-          STOP.
+           DISPLAY ENTER THE LIMIT
+           ACCEPT END.
+           MOVE SPACES TO cur last.
+           DISPLAY N-1.
+           SUBTRACT 1 FROM END.
+           MOVE 1 TO N.
+           PERFORM PRINT-FIB END TIMES.
+           STOP.
        PRINT-FIB.
-          DISPLAY N.
-          ADD N-1 TO N GIVING CUR.
-          MOVE NTON -1
-          MOVE CURTON.
+           DISPLAY N.
+           ADD N-1 TO N GIVING CUR.
+           MOVE NTON -1
+           MOVE CURTON.
