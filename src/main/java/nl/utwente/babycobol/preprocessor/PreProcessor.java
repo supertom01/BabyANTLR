@@ -108,29 +108,4 @@ public class PreProcessor {
             }
         }
     }
-
-    public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\fib.bc");
-//        PreProcessor preProcessor = new PreProcessor(file);
-        PreProcessor preProcessor = new PreProcessor(
-            """
-                000001-IDENTIFICATION DIVISION.
-                000002* This is a comment
-                000003-2 BETA LIKE TEST.
-                000004# This is just wrong
-                000005-     1 OMEGA OCCURS 20 TIMES.
-                000006 2 ALPHA PICTURE IS AAAXXXXX9.
-                000007-    This should work.
-                000008-    And this too!."""
-        );
-        preProcessor.process();
-        for (Line line : preProcessor.getLines()) {
-            System.out.println(line.getClean());
-//            System.out.printf("%s %s%n", line.getClean(), line.getLineType());
-        }
-        for (String error : preProcessor.errors) {
-            System.err.println(error);
-        }
-    }
-
 }

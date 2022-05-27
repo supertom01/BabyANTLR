@@ -5,15 +5,9 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
-import javax.management.monitor.CounterMonitor;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.antlr.v4.runtime.Token.EOF;
 
 public class BabyCobolErrors extends BaseErrorListener {
 

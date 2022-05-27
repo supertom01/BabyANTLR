@@ -1,0 +1,38 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. SUFFICIENT-QUALIFICATION.
+           AUTHOR. TOM MEULENKAMP.
+           DATE. 23-05-2022.
+       DATA DIVISION.
+           10 SECTION-1.
+             15 A.
+               16 B PICTURE IS XX(2)V-9.
+             11 B.
+               12 Z.
+                 20 U PICTURE IS 9(4)V99.
+      * Is the line below allowed? Or does this cause an infinite loop?
+      *          13 C LIKE Z.
+                 13 C LIKE SECTION-1.
+           10 SECTION-2.
+             15 U PICTURE IS XX.
+             15 X OCCURS 20 TIMES.
+             15 Y.
+      * Should work, since it points to a direct child "B" of "SECTION-1" FIXME: Is at the moment an ambiguous reference!
+               16 S LIKE B OF SECTION-1.
+               16 Z LIKE B OF A OF SECTION-1.
+               16 W LIKE U OF SECTION-2.
+       PROCEDURE DIVISION.
+       MAIN.
+      * Should work since B is only once defined as a field. (Containers cannot be used in expressions)
+           DISPLAY B.
+      * Should work since C is only once defined as a field.
+           DISPLAY C.
+      * Should work since U is uniquely referenced by indicating that it has to be taken from section-1.
+           DISPLAY U OF SECTION-1.
+      * The compiler should figure out that B is now a container, containing the variable U.
+           DISPLAY U OF B.
+           DISPLAY U OF Z OF B OF SECTION-1.
+           DISPLAY U OF SECTION-2.
+      * The line "A LIKE B OF SECTION-1." should allow the following:
+           DISPLAY U OF Z OF A OF Y OF SECTION-2.
+           DISPLAY U OF Y.
+

@@ -60,3 +60,70 @@
 
 * Move atomic expressions out of normal statements.
 * PROBLEM: How do we tell the parser to choose depending on the case?!
+
+* White space insignificance
+-> Tried to split tokens into subtokens consisting out of single letters, didn't work. Whitespace still affected
+   tokenization.
+-> Put separate single char tokens as grammar rules.
+   -> This works great! Only have to figure out on how to handle the picture repr. and integers.
+   -> Integers should have been fixed
+
+16-05-2022:
+* Started on using predicates in order to distinguish keywords from identifiers.
+* Well, eventually decided to switch back, since during the parsing one cannot get the value of a gramamr rule on the
+  right-hand-side, since this can still be anything. (Yield a class casting error)
+
+17-05-2022:
+* Possibly came up with a fix for yesterday's issue. So instead of redefining every token as a grammar rule consisting
+  out of separate tokens we are back at actual tokens. However, they are built up from individual character fragments
+  that are non-greedily followed by whitespace.
+  -> This especially took a lot of effort, since everything was being recognized as names, this was fixed by making sure
+     that all the individual fragments have a non-greedy consumption of possible whitespace.
+  -> It should now be possible to use predicates in order to check if the parser should detect the keyword or tell that
+     it is an identifier.
+
+18-05-2022:
+* While testing the parser I figured out that ANTLR shows all the places where ambiguity takes place. Perhaps there are
+  triggers fired during parsing upon which we could act.
+* Start focussing on one thing at the time, for now do not continue on white-space ignorance. But first focus on having
+  the option to have keywords as identifiers.
+* Just discovered that ambiguities are apparently reported!!! And can be dealt with in the error listener!!!
+* Ambiguities are indeed DETECTED, but cannot be changed with the reportAmbiguity() function as declared in the
+  BaseErrorListener.
+
+19-05-2022:
+* New idea, we can apparently not get the proper input in a predicate of a grammar rule before deciding things.
+  However, if a predicate decides to fail afterwards, we can handle accordingly.
+  -> Yeah handling things afterwards in this manner doesn't seem the best option.
+* Perhaps now take a look at having the ability to use error recovery?!
+* Since I am quite stuck, for now wait till I get the repositories from Vadim and start focussing on something else.
+
+23-05-2022:
+* Start on sufficient qualification.
+* Finished the data structure that holds all variables according to the given order and levels.
+* Created a tree visitor that collects the variables into the previously made data structure.
+
+24-05-2022:
+* Validate the quantification in the procedure division. Give error messages and warnings when appropriate.
+
+25-05-2022:
+* Finally received the ANTLR projects from Vadim.
+  -> All of them have not implemented the keywords == identifiers feature.
+  -> Some of them have limited whitespace ignorance between tokens but not within them.
+     -> Hence that feature isn't implemented either since one just does WS: [ ] -> skip;
+* Conclusion: Perhaps a better idea to just let the idea die for now and focus on other features!
+  -> We can of course still describe the idea in the paper, and where the journey has ended.
+  -> TODO: Message Vadim on what to do, for now continue with sufficient qualification
+* Got answer back during the meeting on what would happen with the example:
+
+000001 ...
+000002 PROCEDURE DIVISION.
+000003     DISPLAY A.
+000004   X.
+000005     DISPLAY B.
+
+Where X is parsed as a label "X" and not skipped over or parsed as "  X"
+
+27-05-2022:
+* Finished sufficient qualification.
+* Continue on writing a pre-processor in ANTLR.
