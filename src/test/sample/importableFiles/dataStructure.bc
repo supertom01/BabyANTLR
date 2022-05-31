@@ -1,0 +1,8 @@
+           01 PERSON.
+            02 FIRST-NAME PICTURE IS X(25).
+            02 LAST-NAME PICTURE IS X(25).
+            02 PLACE-OF-BIRTH.
+             03 COUNTRY LIKE FIRST-NAME.
+             03 PROVINCE LIKE COUNTRY.
+             03 CITY LIKE PROVINCE.
+            02 PHONE-NUMBER PICTURE IS A9(10).

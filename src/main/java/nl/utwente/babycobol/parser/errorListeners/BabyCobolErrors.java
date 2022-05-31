@@ -38,9 +38,9 @@ public class BabyCobolErrors extends BaseErrorListener {
         Line errorLine = this.originalCode.get(line - 1);
         int[] lines = errorLine.getLineNumbers();
          if (lines.length == 1) {
-            System.err.printf("line %d:%d %s%n", lines[0], charPositionInLine, msg);
+            System.err.printf("[%s] line %d:%d %s%n", errorLine.getFileName(), lines[0], charPositionInLine, msg);
         } else {
-            System.err.printf("lines %s:%d %s%n", Arrays.toString(lines), charPositionInLine, msg);
+            System.err.printf("[%s] lines %s:%d %s%n", errorLine.getFileName(), Arrays.toString(lines), charPositionInLine, msg);
         }
         underlineError(recognizer, (Token) offendingSymbol, line, charPositionInLine);
     }

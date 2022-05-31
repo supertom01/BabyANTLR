@@ -1,8 +1,8 @@
 package nl.utwente.babycobol.parser;
 
 import nl.utwente.babycobol.data.DataStructureGenerator;
-import nl.utwente.babycobol.data.Qualification;
 import nl.utwente.babycobol.data.Node;
+import nl.utwente.babycobol.data.QualificationChecker;
 import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
 import nl.utwente.babycobol.preprocessor.Line;
@@ -15,18 +15,25 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 public class BParser {
 
+    private List<Line> lines;
+
     /**
      * Takes a BabyCobol source file as input, runs the preprocessor over it and afterwards runs the ANTLR parser.
      * @param sourceFile A file containing code written in BabyCobol.
      */
-    public ParseTree process(File sourceFile, boolean verbose) throws IOException {
-        List<Line> lines = preProcess(sourceFile);
-        return parse(lines, verbose);
+    public ParseTree process(File sourceFile, String outputFile) throws IOException {
+        this.lines = preProcess(sourceFile);
+        return parse(lines, outputFile);
+    }
+
+    public ParseTree process(File sourceFile) throws IOException {
+        return process(sourceFile, null);
     }
 
     public List<Line> preProcess(File sourceFile) throws IOException {
@@ -35,13 +42,17 @@ public class BParser {
         return preProcessor.getLines();
     }
 
-    public ParseTree parse(List<Line> lines, boolean verbose) {
+    public ParseTree parse(List<Line> lines, String outputFile) {
         StringBuilder code = new StringBuilder();
         for (Line line : lines) {
             code.append(line.getClean());
         }
-        if (verbose) {
-            System.out.println(code);
+        if (outputFile != null) {
+            try (FileWriter writer = new FileWriter(outputFile)) {
+                writer.write(code.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         CharStream stream = CharStreams.fromString(code.toString());
         Lexer lexer = new BabyCobolLexer(stream);
@@ -52,10 +63,18 @@ public class BParser {
     }
 
     public Node doSufficientQualification(ParseTree program) throws ParseException {
-        DataStructureGenerator generator = new DataStructureGenerator();
+        DataStructureGenerator generator = new DataStructureGenerator(this.lines);
         Node root = generator.visit(program);
         for (String error : generator.getErrors()) {
             System.err.println(error);
+        }
+        QualificationChecker checker = new QualificationChecker(root, this.lines);
+        (new ParseTreeWalker()).walk(checker, program);
+        for (String error : checker.getErrors()) {
+            System.err.println(error);
+        }
+        for (String warning : checker.getWarnings()) {
+            System.out.println(warning);
         }
         return root;
     }
@@ -63,10 +82,10 @@ public class BParser {
     public static void main(String[] args) {
         File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\sufficient_qualification2.bc");
         BParser parser = new BParser();
+        String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {
-            ParseTree tree = parser.process(file, true);
+            ParseTree tree = parser.process(file, outputFile);
             Node root = parser.doSufficientQualification(tree);
-            System.out.println(root);
         } catch (IOException e) {
             System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
             System.exit(0);

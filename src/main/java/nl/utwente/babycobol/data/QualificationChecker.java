@@ -1,16 +1,21 @@
 package nl.utwente.babycobol.data;
 
+import nl.utwente.babycobol.Utils;
 import nl.utwente.babycobol.parser.BabyCobolBaseListener;
 import nl.utwente.babycobol.parser.BabyCobolParser;
+import nl.utwente.babycobol.preprocessor.Line;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QualificationChecker extends BabyCobolBaseListener {
 
     private final Node variables;
+
+    private final List<Line> lines;
     private boolean procedureStarted;
 
     /** Stores for each given identifier context the given node with information of the variable */
@@ -19,8 +24,9 @@ public class QualificationChecker extends BabyCobolBaseListener {
     private final List<String> errors;
     private final List<String> warnings;
 
-    public QualificationChecker(Node variableRoot) {
+    public QualificationChecker(Node variableRoot, List<Line> lines) {
         this.variables = variableRoot;
+        this.lines = lines;
         this.procedureStarted = false;
         this.variableNode = new ParseTreeProperty<>();
         this.errors = new ArrayList<>();
@@ -34,8 +40,7 @@ public class QualificationChecker extends BabyCobolBaseListener {
      * @param errorMessage  The error message to be displayed.
      */
     public void addError(Token token, String errorMessage) {
-        this.errors.add(String.format("line %d:%d %s", token.getLine(), token.getCharPositionInLine(),
-                errorMessage));
+       this.errors.add(Utils.formatMessage(this.lines, token, errorMessage));
     }
 
     /**
@@ -45,8 +50,7 @@ public class QualificationChecker extends BabyCobolBaseListener {
      * @param warningMessage The warning message to be displayed.
      */
     public void addWarning(Token token, String warningMessage) {
-        this.warnings.add(String.format("line %d:%d %s", token.getLine(), token.getCharPositionInLine(),
-                warningMessage));
+        this.warnings.add(Utils.formatMessage(this.lines, token, warningMessage));
     }
 
     public List<String> getErrors() {
@@ -198,16 +202,6 @@ public class QualificationChecker extends BabyCobolBaseListener {
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    public void exitDisplayStatement(BabyCobolParser.DisplayStatementContext ctx) {
-        Node node = variableNode.get(ctx.displayExpression(0).atomic().identifier());
-        if (node == null) {
-            System.out.println("Couldn't find identifier...");
-        } else {
-            System.out.printf("%d: %s%n", node.getLevel(), node.getValue());
         }
     }
 }

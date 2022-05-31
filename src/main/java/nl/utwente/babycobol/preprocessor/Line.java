@@ -19,18 +19,20 @@ public class Line {
     private final String ignored;
 
     private final int lineNumber;
-//    private final int[] lineNumbers;
+
+    private final String fileName;
 
     private final Line[] originalLines;
 
     private Line(String sequenceArea, String indicator, String sectionA, String sectionB, String ignored,
-                int lineNumber, Line[] originalLines) {
+                int lineNumber, String fileName, Line[] originalLines) {
         this.sequenceArea = sequenceArea;
         this.indicator = indicator;
         this.sectionA = sectionA;
         this.sectionB = sectionB;
         this.ignored = ignored;
         this.lineNumber = lineNumber;
+        this.fileName = fileName;
         this.originalLines = originalLines;
     }
 
@@ -44,8 +46,8 @@ public class Line {
      * @param lineNumber
      */
     public Line(String sequenceArea, String indicator, String sectionA, String sectionB, String ignored,
-                int lineNumber) {
-        this(sequenceArea, indicator, sectionA, sectionB, ignored, lineNumber, null);
+                int lineNumber, String fileName) {
+        this(sequenceArea, indicator, sectionA, sectionB, ignored, lineNumber, fileName, null);
     }
 
     /**
@@ -58,8 +60,8 @@ public class Line {
      * @param originalLines
      */
     public Line(String sequenceArea, String indicator, String sectionA, String sectionB, String ignored,
-                Line[] originalLines) {
-        this(sequenceArea, indicator, sectionA, sectionB, ignored, -1, originalLines);
+                String fileName, Line[] originalLines) {
+        this(sequenceArea, indicator, sectionA, sectionB, ignored, -1, fileName, originalLines);
     }
 
     public String contentArea() {
@@ -138,6 +140,10 @@ public class Line {
         return line;
     }
 
+    public String getFileName() {
+        return this.fileName;
+    }
+
     @Override
     public String toString() {
         return this.sequenceArea + this.indicator + sectionA + sectionB + ignored;
@@ -155,10 +161,10 @@ public class Line {
         StringBuilder builder = new StringBuilder(base.sectionB());
         for (int i = 0; i < lines.length; i++) {
             originalLines[base.getLineNumbers().length + i] = lines[i];
-            builder.append(lines[i].sectionB());
+            builder.append(lines[i].contentArea());
         }
         return new Line(base.sequenceArea, base.indicator, base.sectionA,
-            builder.toString(), "", originalLines);
+            builder.toString(), "", base.fileName, originalLines);
     }
 
 }

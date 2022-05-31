@@ -127,3 +127,16 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 27-05-2022:
 * Finished sufficient qualification.
 * Continue on writing a pre-processor in ANTLR.
+
+30-05-2022:
+* Decided previously that it would be nice to support the COPY feature. This has now mostly been completed. Including
+  giving errors in the correct locations, within the original files.
+* However, after parsing has finished, we should still write a nice error method that also puts errors in a proper
+  location when walking the tree with a tree listener or visitor.
+* Found two bugs. Copy doesn't always replace all words, and apparently we cannot do like statements referring to fields
+  in the data division...
+  -> Both are fixed!
+* Error messages always include the file name of the original file, and the correct line numbers. Additionally they have
+  the erroring toking underlined.
+  -> TODO: Sometimes, however, we have an expression that is broken and not just a token. We still have to fix this,
+      since only tokens are supported for now.

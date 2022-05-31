@@ -24,7 +24,7 @@
        MAIN.
       * Should work since B is only once defined as a field. (Containers cannot be used in expressions)
            DISPLAY B.
-      * Should work since C is only once defined as a field.
+      * Will not work. C is perhaps defined once, but
            DISPLAY C.
       * Should work since U is uniquely referenced by indicating that it has to be taken from section-1.
            DISPLAY U OF SECTION-1.
@@ -33,6 +33,6 @@
            DISPLAY U OF Z OF B OF SECTION-1.
            DISPLAY U OF SECTION-2.
       * The line "A LIKE B OF SECTION-1." should allow the following:
-           DISPLAY U OF Z OF A OF Y OF SECTION-2.
+           DISPLAY U OF Z OF S OF Y OF SECTION-2.
            DISPLAY U OF Y.
 

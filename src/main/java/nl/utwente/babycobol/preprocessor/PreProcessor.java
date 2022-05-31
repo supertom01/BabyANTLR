@@ -4,6 +4,8 @@
 
 package nl.utwente.babycobol.preprocessor;
 
+import nl.utwente.babycobol.exceptions.ParseException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,31 +23,38 @@ public class PreProcessor {
     /** The regex pattern that matches a single line. */
     private Pattern linePattern;
 
+    private String fileName;
+
     /**
      * Reads a file and loads all the lines into the pre-processor.
      * @param codeFile      The file that should be processed.
      * @throws IOException  Thrown if we are unable to read the file.
      */
     public PreProcessor(File codeFile) throws IOException {
-        this(Files.readAllLines(codeFile.toPath()).toArray(new String[]{}));
+        this(Files.readAllLines(codeFile.toPath()).toArray(new String[]{}), codeFile.getAbsolutePath());
     }
 
     /**
      * Reads a code string and splits it into lines based on newlines (\n) present in the string.
      * @param code The string containing the code to be pre-processed.
      */
-    public PreProcessor(String code) {
-        this(code.split("\r?\n"));
+    public PreProcessor(String code, String fileName) {
+        this(code.split("\r?\n"), fileName);
+    }
+
+    public PreProcessor(List<String> lines, String fileName) {
+        this(lines.toArray(new String[0]), fileName);
     }
 
     /**
      * Takes on an array of code lines and constructs the pre-processor.
      * @param lines The lines that have to be pre-processed.
      */
-    public PreProcessor(String[] lines) {
+    public PreProcessor(String[] lines, String fileName) {
         this.source_code = lines;
         this.errors = new ArrayList<>();
         this.lines = new ArrayList<>(source_code.length);
+        this.fileName = fileName;
 
         //   1-6 : Sequence number
         //     7 : Line type
@@ -63,6 +72,10 @@ public class PreProcessor {
         return !this.errors.isEmpty();
     }
 
+    public List<String> getErrors() {
+        return this.errors;
+    }
+
     /**
      * Insert this line into the previous set line.
      * The previous line is automatically selected.
@@ -75,6 +88,19 @@ public class PreProcessor {
         } else {
             Line lastLine = lines.get(lines.size() - 1);
             lines.set(lines.size() - 1, Line.mergeLines(lastLine, line));
+        }
+    }
+
+    public List<Line> handleCopyStatement(Line line) {
+        File file = new File(this.fileName);
+        CopyStatement copyStatement = new CopyStatement(file.getParent());
+        try {
+            return copyStatement.process(line);
+        } catch (ParseException e) {
+            for (String error : copyStatement.getErrors()) {
+                System.err.println(error);
+            }
+            return null;
         }
     }
 
@@ -94,7 +120,7 @@ public class PreProcessor {
             Matcher matcher = this.linePattern.matcher(this.source_code[i]);
             if (matcher.matches()) {
                 Line line = new Line(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4),
-                    matcher.group(5), i + 1);
+                    matcher.group(5), i + 1, this.fileName);
 
                 switch (line.getLineType()) {
                     case COMMENT -> {}
@@ -105,6 +131,15 @@ public class PreProcessor {
                 }
             } else {
                 this.errors.add(String.format("Line %d: Failed to parse", i + 1));
+            }
+        }
+
+        List<Line> iterList = List.copyOf(this.lines);
+        for (int i = iterList.size() - 1; i >= 0; i--) {
+            List<Line> copyLines = handleCopyStatement(iterList.get(i));
+            if (copyLines != null && copyLines.size() > 0) {
+                this.lines.remove(i);
+                this.lines.addAll(i, copyLines);
             }
         }
     }

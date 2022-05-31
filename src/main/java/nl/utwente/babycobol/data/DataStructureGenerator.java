@@ -1,10 +1,14 @@
 package nl.utwente.babycobol.data;
 
+import nl.utwente.babycobol.Utils;
 import nl.utwente.babycobol.parser.BabyCobolBaseVisitor;
 import nl.utwente.babycobol.parser.BabyCobolParser;
+import nl.utwente.babycobol.preprocessor.Line;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,13 +22,16 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
     /** A list of error messages, that are generated during the production of the tree. */
     private final List<String> errors;
 
+    private final List<Line> lines;
+
     /** The root of the tree, this is an artificial node and contains no valid value by itself. */
     private final Node root;
 
     /** If set to true, then the visitor is evaluating a like statement. */
     private boolean inLikeStatement;
 
-    public DataStructureGenerator() {
+    public DataStructureGenerator(List<Line> lines) {
+        this.lines = lines;
         this.errors = new ArrayList<>();
         this.root = new Node("", -1, false);
         this.inLikeStatement = false;
@@ -41,7 +48,7 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
      * @param errorMessage The error message itself.
      */
     public void addError(Token token, String errorMessage) {
-        errors.add(String.format("line %d:%d %s", token.getLine(), token.getCharPositionInLine(), errorMessage));
+        this.errors.add(Utils.formatMessage(this.lines, token, errorMessage));
     }
 
     /**
@@ -101,8 +108,8 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
             Node likeNode = visit(declaration.typeDeclaration());
             if (likeNode != null) {
                 if (likeNode.containsNode(variable)) {
-                    addError(declaration.getStart(), "Cannot construct a recursive data type pointing to " +
-                            "itself.");
+                    addError(declaration.typeDeclaration().getStart(), "Cannot construct a recursive data " +
+                            "type pointing to itself.");
                 } else {
                     for (Node child : likeNode.getChildren()) {
                         Node copy = Node.deepCopyNode(child);
@@ -186,10 +193,11 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
     public Node visitNameIdentifier(BabyCobolParser.NameIdentifierContext ctx) {
         if (inLikeStatement) {
             String identifier = normalizeIdentifier(ctx.ID().getText());
-            List<Node> nodes = this.root.getAllContainerNodes(identifier);
+            List<Node> nodes = this.root.getAllNodes(identifier);
             if (nodes.size() == 0) {
-                addError(ctx.ID().getSymbol(), "Could not find a container with the name " + identifier);
+                addError(ctx.ID().getSymbol(), "Could not find a container or field with the name " + identifier);
             } else if (nodes.size() == 1) {
+                // Make sure that if the node points to a container, that it is not contained within that container.
                 return nodes.get(0);
             } else {
                 addError(ctx.ID().getSymbol(), "Found ambiguous reference for the name " + identifier);

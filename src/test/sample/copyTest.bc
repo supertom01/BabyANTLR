@@ -1,0 +1,17 @@
+       IDENTIFICATION DIVISION.
+           COPY importableFiles/defaultHeader.bc REPLACING ===$DATE=== B
+      -Y ===30-05-2022=== ===NAME=== BY ===COPYTest===.
+       DATA DIVISION.
+           01 A.
+            02 B PICTURE IS 99.
+            02 C PICTURE IS 99.
+            02 D LIKE B.
+           01 D.
+            02 A PICTURE IS 99.
+            02 FOO PICTURE IS XXXX.
+           COPY importableFiles/dataStructure.bc.
+       PROCEDURE DIVISION.
+       MAIN.
+           COPY importableFiles/toCopy.bc REPLACING === D.=== BY === X.=
+      -==.
+           STOP.

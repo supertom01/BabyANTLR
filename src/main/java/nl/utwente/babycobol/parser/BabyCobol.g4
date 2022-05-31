@@ -15,9 +15,6 @@ program: identificationDivision (dataDivision)? (procedureDivision)?;
 
 identificationDivision: IDENTIFICATION_DIVISION '.' (~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+ '.' ~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+ '.')+;
 
-//TODO: Include copy instruction support
-//identificationDivision: identification division '.' (~('.' )+ '.' ~'.' '.')+;
-
 dataDivision: DATA_DIVISION '.' (declaration '.')+;
 
 declaration: INTEGER ID typeDeclaration;
@@ -32,7 +29,6 @@ sentence: statement+ '.';
 
 statement: ACCEPT identifier+                                                       #AcceptStatement
          | ALTER procedureName TO_PROCEED_TO procedureName                          #AlterStatement
-         | COPY FILENAME (REPLACING replaceExpression+)?                            #CopyStatement
          | DISPLAY displayExpression* (WITH_NO_ADVANCING)?                          #DisplayStatement
          | GO_TO procedureName                                                      #GoToStatement
          | IF booleanExpression THEN statement+ (ELSE statement+)? END?             #IfStatement
@@ -51,8 +47,6 @@ atomicExpression: ADD atomic+ TO atomic (GIVING identifier)?                    
                 | MULTIPLY atomic BY atomic+ (GIVING identifier)?                           #multiplyExpression
                 | SUBTRACT atomic+ FROM atomic (GIVING identifier)?                         #substractExpression
                 ;
-
-replaceExpression: COPY_QUOTE literal COPY_QUOTE BY COPY_QUOTE literal COPY_QUOTE;
 
 displayExpression: atomic (DELIMITED_BY (SPACE | SIZE | literal))?;
 
@@ -110,10 +104,10 @@ identifier: ID                           #nameIdentifier
 //          | /*{!isKeyWord()}?*/ keywords #keywordIdentifier
           ;
 
-keywords: ACCEPT | ADD | ALTER | COPY | DISPLAY | DIVIDE | EVALUATE | IF | LOOP | MOVE | MULTIPLY | PERFORM | SIGNAL
+keywords: ACCEPT | ADD | ALTER | DISPLAY | DIVIDE | EVALUATE | IF | LOOP | MOVE | MULTIPLY | PERFORM | SIGNAL
                     | STOP | PICTURE | OCCURS | LIKE | WITH_NO_ADVANCING | AND | BY | DELIMITED_BY | ELSE | END | ON_ERROR
                     | FALSE | FROM | GIVING | GO_TO | HIGH_VALUES | IS | INTO | LOW_VALUES | NEXT | NOT | OF | OFF | OR | OTHER
-                    | TO_PROCEED_TO | REMAINDER | REPLACING | SENTENCE | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
+                    | TO_PROCEED_TO | REMAINDER | SENTENCE | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
                     | TO | TRUE | UNTIL | VARYING | WHEN | WHILE | XOR
                     ;
 
@@ -145,7 +139,6 @@ STRING: '"' ~'"'* '"';
 ACCEPT:     A C C E P T;
 ADD:        A D D;
 ALTER:      A L T E R;
-COPY:       C O P Y;
 DISPLAY:    D I S P L A Y;
 DIVIDE:     D I V I D E;
 EVALUATE:   E V A L U A T E;
@@ -182,7 +175,6 @@ ON_ERROR:   O N E R R O R;
 OR:         O R;
 OTHER:      O T H E R;
 REMAINDER:  R E M A I N D E R;
-REPLACING:  R E P L A C I N G;
 SENTENCE:   S E N T E N C E;
 SIZE:       S I Z E;
 SPACES:     S P A C E S;
@@ -209,6 +201,7 @@ ID: (CHAR | '-') (CHAR | INT | '-')*;
 INTEGER: INT+;
 
 WS: [ \t\r\n]+ -> skip;
+IGNORED: .;
 
 fragment CHAR: A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z;
 
