@@ -1,5 +1,6 @@
 package nl.utwente.babycobol.parser.errorListeners;
 
+import nl.utwente.babycobol.Utils;
 import nl.utwente.babycobol.preprocessor.Line;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
@@ -35,14 +36,16 @@ public class BabyCobolErrors extends BaseErrorListener {
             return;
         }
 
-        Line errorLine = this.originalCode.get(line - 1);
-        int[] lines = errorLine.getLineNumbers();
-         if (lines.length == 1) {
-            System.err.printf("[%s] line %d:%d %s%n", errorLine.getFileName(), lines[0], charPositionInLine, msg);
-        } else {
-            System.err.printf("[%s] lines %s:%d %s%n", errorLine.getFileName(), Arrays.toString(lines), charPositionInLine, msg);
-        }
-        underlineError(recognizer, (Token) offendingSymbol, line, charPositionInLine);
+        String message = Utils.formatMessage(this.originalCode, (Token) offendingSymbol, msg);
+        System.err.println(message);
+//        Line errorLine = this.originalCode.get(line - 1);
+//        int[] lines = errorLine.getLineNumbers();
+//         if (lines.length == 1) {
+//            System.err.printf("[%s] line %d:%d %s%n", errorLine.getFileName(), lines[0], charPositionInLine, msg);
+//        } else {
+//            System.err.printf("[%s] lines %s:%d %s%n", errorLine.getFileName(), Arrays.toString(lines), charPositionInLine, msg);
+//        }
+//        underlineError(recognizer, (Token) offendingSymbol, line, charPositionInLine);
     }
 
     @Override

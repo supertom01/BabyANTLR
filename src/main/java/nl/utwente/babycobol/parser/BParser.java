@@ -7,6 +7,7 @@ import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
 import nl.utwente.babycobol.preprocessor.Line;
 import nl.utwente.babycobol.preprocessor.PreProcessor;
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,11 +18,13 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class BParser {
 
     private List<Line> lines;
+    private BabyCobolParser parser;
 
     /**
      * Takes a BabyCobol source file as input, runs the preprocessor over it and afterwards runs the ANTLR parser.
@@ -56,7 +59,7 @@ public class BParser {
         }
         CharStream stream = CharStreams.fromString(code.toString());
         Lexer lexer = new BabyCobolLexer(stream);
-        BabyCobolParser parser = new BabyCobolParser(new CommonTokenStream(lexer));
+        this.parser = new BabyCobolParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(new BabyCobolErrors(lines));
         return parser.program();
@@ -79,12 +82,17 @@ public class BParser {
         return root;
     }
 
+    public void visualizeTree(ParseTree tree) {
+        (new TreeViewer(Arrays.asList(parser.getRuleNames()),tree)).open();
+    }
+
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\sufficient_qualification2.bc");
+        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\sufficient_qualification.bc");
         BParser parser = new BParser();
         String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {
             ParseTree tree = parser.process(file, outputFile);
+            parser.visualizeTree(tree);
             Node root = parser.doSufficientQualification(tree);
         } catch (IOException e) {
             System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());

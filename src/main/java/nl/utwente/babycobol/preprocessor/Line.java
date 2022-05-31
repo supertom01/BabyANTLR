@@ -146,7 +146,7 @@ public class Line {
 
     @Override
     public String toString() {
-        return this.sequenceArea + this.indicator + sectionA + sectionB + ignored;
+        return String.format("%06d", this.getLineNumber()) + this.indicator + sectionA + sectionB + ignored;
     }
 
     /**

@@ -4,11 +4,9 @@ import nl.utwente.babycobol.Utils;
 import nl.utwente.babycobol.parser.BabyCobolBaseVisitor;
 import nl.utwente.babycobol.parser.BabyCobolParser;
 import nl.utwente.babycobol.preprocessor.Line;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -132,7 +130,13 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
      */
     @Override
     public Node visitDeclaration(BabyCobolParser.DeclarationContext ctx) {
-        String identifier = normalizeIdentifier(ctx.ID().getText());
+        String identifier;
+        if (ctx.ID() != null) {
+            identifier = normalizeIdentifier(ctx.ID().getText());
+        } else {
+            identifier = normalizeIdentifier(ctx.keywords().getText());
+        }
+
         String strLevel = ctx.INTEGER().getText();
         if (strLevel.length() != 2) {
             addError(ctx.getStart(), "The level of a field should always consist out of two characters.");
@@ -159,7 +163,12 @@ public class DataStructureGenerator extends BabyCobolBaseVisitor<Node> {
 
     @Override
     public Node visitQuantifiedIdentifier(BabyCobolParser.QuantifiedIdentifierContext ctx) {
-        String identifier = normalizeIdentifier(ctx.ID().getText());
+        String identifier;
+        if (ctx.ID() != null) {
+            identifier = normalizeIdentifier(ctx.ID().getText());
+        } else {
+            identifier = normalizeIdentifier(ctx.keywords().getText());
+        }
         Node parent = visit(ctx.identifier());
         List<Node> nodes = parent.getAllNodes(identifier);
         if (nodes.size() == 0) {

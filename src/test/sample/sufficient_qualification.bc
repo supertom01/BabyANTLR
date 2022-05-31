@@ -16,7 +16,7 @@
              15 U PICTURE IS XX.
              15 X OCCURS 20 TIMES.
              15 Y.
-      * Should work, since it points to a direct child "B" of "SECTION-1" FIXME: Is at the moment an ambiguous reference!
+      * Should work, since it points to a direct child "B" of "SECTION-1"
                16 S LIKE B OF SECTION-1.
                16 Z LIKE B OF A OF SECTION-1.
                16 W LIKE U OF SECTION-2.
@@ -24,7 +24,7 @@
        MAIN.
       * Should work since B is only once defined as a field. (Containers cannot be used in expressions)
            DISPLAY B.
-      * Will not work. C is perhaps defined once, but
+      * Will not work. C is perhaps defined once, but S copies section-1.
            DISPLAY C.
       * Should work since U is uniquely referenced by indicating that it has to be taken from section-1.
            DISPLAY U OF SECTION-1.

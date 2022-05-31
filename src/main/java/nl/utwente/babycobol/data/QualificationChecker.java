@@ -90,8 +90,15 @@ public class QualificationChecker extends BabyCobolBaseListener {
         // Otherwise, they are just being defined.
         // One edge-case is when qualification is used within the data division.
         if (this.procedureStarted || ctx.getParent() instanceof BabyCobolParser.QuantifiedIdentifierContext) {
-            String identifier = normalizeIdentifier(ctx.ID().getText());
-            Token identifierToken = ctx.ID().getSymbol();
+            String identifier;
+            Token identifierToken;
+            if (ctx.ID() != null) {
+                identifier = normalizeIdentifier(ctx.ID().getText());
+                identifierToken = ctx.ID().getSymbol();
+            } else {
+                identifier = normalizeIdentifier(ctx.keywords().getText());
+                identifierToken = ctx.keywords().getStart();
+            }
 
             // Give a warning when the field is implicitly defined.
             if (!this.variables.containsValue(identifier)) {
@@ -147,8 +154,16 @@ public class QualificationChecker extends BabyCobolBaseListener {
      */
     @Override
     public void exitQuantifiedIdentifier(BabyCobolParser.QuantifiedIdentifierContext ctx) {
-        String identifier = normalizeIdentifier(ctx.ID().getText());
-        Token identifierToken = ctx.ID().getSymbol();
+        String identifier;
+        Token identifierToken;
+        if (ctx.ID() != null) {
+            identifier = normalizeIdentifier(ctx.ID().getText());
+            identifierToken = ctx.ID().getSymbol();
+        } else {
+            identifier = normalizeIdentifier(ctx.keywords().getText());
+            identifierToken = ctx.keywords().getStart();
+        }
+
         String containerName = normalizeIdentifier(ctx.identifier().getText());
         Node parent = variableNode.get(ctx.identifier());
 

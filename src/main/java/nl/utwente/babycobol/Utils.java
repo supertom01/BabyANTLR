@@ -10,7 +10,7 @@ public class Utils {
 
     public static String formatMessage(List<Line> lines, Token token, String errorMessage) {
         // Shouldn't happen but if we for some reason do not have the line numbers, then just print a default message.
-        if (token.getLine() >= lines.size()) {
+        if (token.getLine() > lines.size()) {
             return String.format("line %d:%d %s", token.getLine(), token.getCharPositionInLine(),
                     errorMessage);
         }
@@ -27,9 +27,7 @@ public class Utils {
             message = String.format("[%s] lines %s:%d %s%n", line.getFileName(),
                     Arrays.toString(line.getLineNumbers()), token.getCharPositionInLine(), errorMessage);
         }
-        int additional_length = String.format("%d.", line.getLineNumber()).length();
-        String errorLine = String.format("%d.%s%s%s", line.getLineNumber(), line.getClean(), " ".repeat(charPos +
-                additional_length), "^".repeat(end - start + 1));
+        String errorLine = String.format("%s%n%s%s", line, " ".repeat(charPos), "^".repeat(end - start + 1));
         return message + errorLine;
     }
 

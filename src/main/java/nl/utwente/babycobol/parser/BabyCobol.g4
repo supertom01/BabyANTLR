@@ -4,11 +4,29 @@ options {
     caseInsensitive = true;
 }
 
+@parser::header {
+import java.util.Set;
+import java.util.HashSet;
+}
+
 @parser::members {
-    public boolean isKeyWord() {
-        String text = getCurrentToken().getText();
-        return text.toUpperCase().equals(text);
+private Set<String> identifiers = new HashSet<>();
+
+public void addIdentifier(String identifier) {
+    if (identifier == null) {
+        return;
     }
+    identifier = identifier.toLowerCase();
+    identifier = identifier.replace(" ", "");
+    identifiers.add(identifier);
+}
+
+public boolean isIdentifier() {
+    String text = getCurrentToken().getText();
+    text = text.replace(" ", "");
+    boolean result = identifiers.contains(text.toLowerCase()) && !text.toUpperCase().equals(text);
+    return result;
+}
 }
 
 program: identificationDivision (dataDivision)? (procedureDivision)?;
@@ -17,47 +35,47 @@ identificationDivision: IDENTIFICATION_DIVISION '.' (~('.' | DATA_DIVISION | PRO
 
 dataDivision: DATA_DIVISION '.' (declaration '.')+;
 
-declaration: INTEGER ID typeDeclaration;
+declaration: INTEGER (ID | keywords {addIdentifier($keywords.text);}) typeDeclaration;
 
 typeDeclaration: ((PICTURE IS picture_repr) | (LIKE identifier))? (OCCURS INTEGER TIMES)?;
 
-procedureDivision: PROCEDURE_DIVISION '.' sentence* paragraph+ STOP?;
+procedureDivision: {!isIdentifier()}? PROCEDURE_DIVISION '.' sentence* paragraph+ STOP?;
 
 paragraph: paragraphName '.' sentence+;
 
 sentence: statement+ '.';
 
-statement: ACCEPT identifier+                                                       #AcceptStatement
-         | ALTER procedureName TO_PROCEED_TO procedureName                          #AlterStatement
-         | DISPLAY displayExpression* (WITH_NO_ADVANCING)?                          #DisplayStatement
-         | GO_TO procedureName                                                      #GoToStatement
-         | IF booleanExpression THEN statement+ (ELSE statement+)? END?             #IfStatement
-         | LOOP loopBody* END                                                       #LoopStatement
-         | MOVE moveExpression TO identifier+                                       #MoveStatement
-         | NEXT sentence                                                            #NextSentenceStatement
-         | PERFORM procedureName (THROUGH procedureName)? (atomic TIMES)?           #PerformStatement
-         | SIGNAL (OFF | procedureName) ON_ERROR                                    #SignalStatement
-         | STOP                                                                     #StopStatement
+statement: {!isIdentifier()}? ACCEPT identifier+                                                       #AcceptStatement
+         | {!isIdentifier()}? ALTER procedureName TO_PROCEED_TO procedureName                          #AlterStatement
+         | {!isIdentifier()}? DISPLAY displayExpression* (WITH_NO_ADVANCING)?                          #DisplayStatement
+         | {!isIdentifier()}? GO_TO procedureName                                                      #GoToStatement
+         | {!isIdentifier()}? IF booleanExpression THEN statement+ (ELSE statement+)? END?             #IfStatement
+         | {!isIdentifier()}? LOOP loopBody* END                                                       #LoopStatement
+         | {!isIdentifier()}? MOVE moveExpression TO identifier+                                       #MoveStatement
+         | {!isIdentifier()}? NEXT sentence                                                            #NextSentenceStatement
+         | {!isIdentifier()}? PERFORM procedureName (THROUGH procedureName)? (atomic TIMES)?           #PerformStatement
+         | {!isIdentifier()}? SIGNAL (OFF | procedureName) ON_ERROR                                    #SignalStatement
+         | {!isIdentifier()}? STOP                                                                     #StopStatement
          | atomicExpression                                                         #AtomicStatement
          ;
 
-atomicExpression: ADD atomic+ TO atomic (GIVING identifier)?                                #addExpression
-                | DIVIDE atomic INTO atomic+ (GIVING identifier)? (REMAINDER identifier)?   #divideExpression
-                | EVALUATE anyExpression (whenBlock statement+)* END                        #evaluateExpression
-                | MULTIPLY atomic BY atomic+ (GIVING identifier)?                           #multiplyExpression
-                | SUBTRACT atomic+ FROM atomic (GIVING identifier)?                         #substractExpression
+atomicExpression: {!isIdentifier()}? ADD atomic+ TO atomic (GIVING identifier)?                                #addExpression
+                | {!isIdentifier()}? DIVIDE atomic INTO atomic+ (GIVING identifier)? (REMAINDER identifier)?   #divideExpression
+                | {!isIdentifier()}? EVALUATE anyExpression (whenBlock statement+)* END                        #evaluateExpression
+                | {!isIdentifier()}? MULTIPLY atomic BY atomic+ (GIVING identifier)?                           #multiplyExpression
+                | {!isIdentifier()}? SUBTRACT atomic+ FROM atomic (GIVING identifier)?                         #substractExpression
                 ;
 
 displayExpression: atomic (DELIMITED_BY (SPACE | SIZE | literal))?;
 
 moveExpression: atomic
-              | HIGH_VALUES
-              | LOW_VALUES
-              | SPACES
+              | {!isIdentifier()}? HIGH_VALUES
+              | {!isIdentifier()}? LOW_VALUES
+              | {!isIdentifier()}? SPACES
               ;
 
-whenBlock: WHEN atomic+
-         | WHEN OTHER
+whenBlock: {!isIdentifier()}? WHEN atomic+
+         | {!isIdentifier()}? WHEN OTHER
          ;
 
 anyExpression: arithmeticExpression
@@ -73,22 +91,26 @@ stringExpression: atomic
                 | stringExpression '+' stringExpression
                 ;
 
-booleanExpression: TRUE
-                 | FALSE
-                 | arithmeticExpression comparisonOperator arithmeticExpression
-                 | NOT booleanExpression
+booleanExpression: {!isIdentifier()}? TRUE
+                 | {!isIdentifier()}? FALSE
+                 | arithmeticExpression (comparisonOperator arithmeticExpression)?
+                 | {!isIdentifier()}? NOT booleanExpression
                  | booleanExpression booleanOperator booleanExpression
                  ;
 
-loopBody: VARYING identifier? (FROM atomic)? (TO atomic)? (BY atomic)?          #VaryingCondition
-        | WHILE booleanExpression                                               #WhileCondition
-        | UNTIL booleanExpression                                               #TillCondition
+loopBody: {!isIdentifier()}? VARYING identifier? (FROM atomic)? (TO atomic)? (BY atomic)?          #VaryingCondition
+        | {!isIdentifier()}? WHILE booleanExpression                                               #WhileCondition
+        | {!isIdentifier()}? UNTIL booleanExpression                                               #TillCondition
         | statement                                                             #GIVEANICENAME
         ;
 
-comparisonOperator: EQUALS | GT | LT | GE | LE;
+comparisonOperator: EQUALS | GT | LT | GE | LE
+                  ;
 
-booleanOperator: OR | AND | XOR;
+booleanOperator: {!isIdentifier()}? OR
+               | {!isIdentifier()}? AND
+               | {!isIdentifier()}? XOR
+               ;
 
 arithmeticOperator: PLUS | MINUS | TIMES_SYM | DIV | POW;
 
@@ -98,18 +120,17 @@ procedureName: ID;
 
 paragraphName: ID;
 
-identifier: ID                           #nameIdentifier
-          | ID '(' INTEGER ')'           #arrayIndexIdentifier
-          | ID OF identifier             #quantifiedIdentifier
-//          | /*{!isKeyWord()}?*/ keywords #keywordIdentifier
+identifier: (ID | {isIdentifier()}? keywords) '(' INTEGER ')' #arrayIndexIdentifier
+          | (ID | {isIdentifier()}? keywords) OF identifier   #quantifiedIdentifier
+          | (ID | {isIdentifier()}? keywords)                 #nameIdentifier
           ;
 
 keywords: ACCEPT | ADD | ALTER | DISPLAY | DIVIDE | EVALUATE | IF | LOOP | MOVE | MULTIPLY | PERFORM | SIGNAL
-                    | STOP | PICTURE | OCCURS | LIKE | WITH_NO_ADVANCING | AND | BY | DELIMITED_BY | ELSE | END | ON_ERROR
-                    | FALSE | FROM | GIVING | GO_TO | HIGH_VALUES | IS | INTO | LOW_VALUES | NEXT | NOT | OF | OFF | OR | OTHER
-                    | TO_PROCEED_TO | REMAINDER | SENTENCE | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
-                    | TO | TRUE | UNTIL | VARYING | WHEN | WHILE | XOR
-                    ;
+        | STOP | PICTURE | OCCURS | LIKE | WITH_NO_ADVANCING | AND | BY | DELIMITED_BY | ELSE | END | ON_ERROR
+        | FALSE | FROM | GIVING | GO_TO | HIGH_VALUES | IS | INTO | LOW_VALUES | NEXT | NOT | OF | OFF | OR | OTHER
+        | TO_PROCEED_TO | REMAINDER | SENTENCE | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
+        | TO | TRUE | UNTIL | VARYING | WHEN | WHILE | XOR
+        ;
 
 picture_repr: (~'.')+;
 

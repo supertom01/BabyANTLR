@@ -1,0 +1,8 @@
+       IDENTIFICATION DIVISION.
+           AUTHOR. TOM MEULENKAMP.
+           PROGRAM-ID. CONTRACTED EXPRESSIONS.
+           DATE. 31-5-2022.
+       PROCEDURE DIVISION.
+       MAIN.
+           IF X = 10 OR 20 THEN
+             DISPLAY X.

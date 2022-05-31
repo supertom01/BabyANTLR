@@ -1,0 +1,36 @@
+       IDENTIFICATION DIVISION.
+           AUTHOR. TOM MEULENKAMP.
+           DATE. 31ST OF MAY.
+           PROGRAM ID. KEYWORDS AS IDENTIFIER CHECK.
+       DATA DIVISION.
+           01 A PICTURE IS 99.
+           01 B LIKE A.
+           01 C LIKE A.
+           01 D LIKE A.
+           01 E LIKE A.
+           01 F LIKE A.
+           01 add LIKE A.
+           01 to LIKE A.
+       PROCEDURE DIVISION.
+       MAIN.
+      *Keywords are:
+      *    vvv   vv   vvv   vv   vvv   vv
+           ADD A TO B ADD C TO D ADD E TO F.                            Succeeds
+           
+      *    vvv              vv   vvv   vv
+           ADD A to B ADD C TO D ADD E TO F.                            Fails
+           
+      *    vvv   vv   vvv              vv
+           ADD A TO B ADD C to D ADD E TO F.                            Fails
+           
+      *    vvv   vv   vvv   vv   vvv   vv
+           ADD A TO B ADD C TO D ADD E to F.                            Succeeds
+           
+      *    vvv                         vv
+           ADD A to B ADD C to D ADD E TO F.                            Fails
+           
+      *    vvv              vv   vvv   vv
+           ADD A to B ADD c TO D ADD E to F.                            Fails
+      * The ones below should fail according to the spec.
+           ADD A TO B ADD C to D ADD E to F.                            Fails
+           ADD A to B ADD C to D ADD E to F.                            Fails

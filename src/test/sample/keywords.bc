@@ -1,0 +1,24 @@
+       IDENTIFICATION DIVISION.
+           AUTHOR. Tom Meulenkamp.
+           Date. 31st of May.
+           Program ID. Keywords as identifier check.
+       DATA DIVISION.
+           01 A.
+            02 for PICTURE IS 99.
+            02 B PICTURE IS 99.
+            02 C PICTURE IS 99.
+            02 loop LIKE B.
+            02 like LIKE B.
+            02 picture.
+             03 D PICTURE IS X.
+           01 LiKE LIKE lIKE OF A.
+       PROCEDURE DIVISION.
+       MAIN.
+      *    LOOP
+      *      DISPLAY for
+      *      WHILE TRUE
+      *      DISPLAY B
+      *    END.
+      *    ADD loop C TO B.
+           DISPLAY D OF picture OF A.
+       STOP.

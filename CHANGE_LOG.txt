@@ -140,3 +140,14 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
   the erroring toking underlined.
   -> TODO: Sometimes, however, we have an expression that is broken and not just a token. We still have to fix this,
       since only tokens are supported for now.
+
+31-05-2022:
+* Implemented keywords as identifiers, but only with limited functionality. Identifiers that are used as keywords cannot
+  be implicitly defined. Additionally, if one wants to use such keyword, it cannot be full uppercase (LOOp is allowed).
+  Last but not least, if you want to use a keyword as a keyword that is also defined as an identifier, then it should be
+  in uppercase.
+  -> This limitation will keep existing, since we have to disable parse rules IN ADVANCE, and cannot backtrack till a
+     certain point when parsing would fail. This is an unfortunate limitation of ANTLR. Backtracking is definitely
+     done by the tool, however this is fully automated and cannot be altered by normal means.
+* There was a small issue where sufficient qualification was not recognized any longer. But this happened due to possible
+  ambiguity. The fix was to reorder the possible identifier statements.
