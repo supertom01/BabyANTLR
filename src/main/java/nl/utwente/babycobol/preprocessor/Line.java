@@ -24,7 +24,7 @@ public class Line {
 
     private final Line[] originalLines;
 
-    private Line(String sequenceArea, String indicator, String sectionA, String sectionB, String ignored,
+    public Line(String sequenceArea, String indicator, String sectionA, String sectionB, String ignored,
                 int lineNumber, String fileName, Line[] originalLines) {
         this.sequenceArea = sequenceArea;
         this.indicator = indicator;
@@ -64,6 +64,14 @@ public class Line {
         this(sequenceArea, indicator, sectionA, sectionB, ignored, -1, fileName, originalLines);
     }
 
+    public String getSequenceArea() {
+        return this.sequenceArea;
+    }
+
+    public String getIgnored() {
+        return this.ignored;
+    }
+
     public String contentArea() {
         return this.sectionA + this.sectionB;
     }
@@ -82,7 +90,7 @@ public class Line {
     }
 
     public int getLineNumber() {
-        return this.lineNumber;
+        return this.lineNumber != -1 ? this.lineNumber : getLineNumbers()[0];
     }
 
     public int[] getLineNumbers() {

@@ -42,6 +42,9 @@ public class BParser {
     public List<Line> preProcess(File sourceFile) throws IOException {
         PreProcessor preProcessor = new PreProcessor(sourceFile);
         preProcessor.process();
+        for (String error : preProcessor.getErrors()) {
+            System.err.println(error);
+        }
         return preProcessor.getLines();
     }
 
@@ -87,7 +90,7 @@ public class BParser {
     }
 
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\sufficient_qualification.bc");
+        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\replaceSpace.bc");
         BParser parser = new BParser();
         String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {

@@ -93,21 +93,38 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
             return;
         }
 
-        // We have to replace values in the file that we've gotten.
-        if (ctx.REPLACING() != null) {
-            for (int i = 0; i < ctx.LITERAL().size(); i += 2) {
-                String original = ctx.LITERAL(i).getText().replaceAll("===", "");
-                String replacement = ctx.LITERAL(i + 1).getText().replaceAll("===", "");
-                code = code.replace(original, replacement);
-            }
-        }
-
         // Also put this code through the pre-processor.
         PreProcessor preProcessor = new PreProcessor(code, fileName);
         preProcessor.process();
         if (preProcessor.hasErrors()) {
             this.errors.addAll(preProcessor.getErrors());
         }
-        this.lines.put(ctx, preProcessor.getLines());
+        List<Line> lines = preProcessor.getLines();
+
+        // We have to replace values in the file that we've gotten.
+        if (ctx.REPLACING() != null) {
+            for (int i = 0; i < ctx.LITERAL().size(); i += 2) {
+                String original = ctx.LITERAL(i).getText().replaceAll("===", "");
+                String replacement = ctx.LITERAL(i + 1).getText().replaceAll("===", "");
+                for (int j = 0; j < lines.size(); j++) {
+                    Line line = lines.get(j);
+                    String newContentArea = line.contentArea().replace(original, replacement);
+                    String newAreaA;
+                    String newAreaB;
+                    if (newContentArea.length() > 4) {
+                        newAreaA = newContentArea.substring(0, 4);
+                        newAreaB = newContentArea.substring(4);
+                    } else {
+                        newAreaA = newContentArea;
+                        newAreaB = "";
+                    }
+                    Line newLine = new Line(line.getSequenceArea(), line.getIndicator(), newAreaA, newAreaB,
+                            line.getIgnored(), line.getLineNumber(), line.getFileName(), line.getOriginalLines());
+                    lines.set(j, newLine);
+                }
+            }
+        }
+
+        this.lines.put(ctx, lines);
     }
 }

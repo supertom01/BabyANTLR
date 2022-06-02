@@ -37,6 +37,7 @@ public class PreProcessor {
     /**
      * Reads a code string and splits it into lines based on newlines (\n) present in the string.
      * @param code The string containing the code to be pre-processed.
+     * @param fileName The file that is being processed. This is used for error messages.
      */
     public PreProcessor(String code, String fileName) {
         this(code.split("\r?\n"), fileName);
@@ -93,7 +94,7 @@ public class PreProcessor {
 
     public List<Line> handleCopyStatement(Line line) {
         File file = new File(this.fileName);
-        CopyStatement copyStatement = new CopyStatement(file.getParent());
+        CopyStatement copyStatement = new CopyStatement(file);
         try {
             return copyStatement.process(line);
         } catch (ParseException e) {

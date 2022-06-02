@@ -1,0 +1,13 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. File that will execute a with other statemen
+      -s in the same line; The statements should be preserved.
+           DATE. 02-06-2022.
+           AUTHOR. Tom Meulenkamp.
+       DATA DIVISION.
+           01 X PICTURE IS 99.
+           01 Y PICTURE IS 99.
+       PROCEDURE DIVISION.
+       MAIN.
+           IF X = 5 THEN COPY importableFiles/toCopy.bc REPLACING ===FOO
+      -=== BY ===X=== ===A OF D=== BY ===X=== ELSE DISPLAY Y.
+       STOP.

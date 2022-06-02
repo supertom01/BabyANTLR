@@ -11,7 +11,7 @@
             02 like LIKE B.
             02 picture.
              03 D PICTURE IS X.
-           01 LiKE LIKE lIKE OF A.
+           01 LiKE LIKE LiKE OF A.
        PROCEDURE DIVISION.
        MAIN.
       *    LOOP

@@ -1,0 +1,5 @@
+       IDENTIFICATION DIVISION.
+           AUTHOR. TOM MEULENKAMP.
+       PROCEDURE DIVISION.
+           MAIN.
+           COPY replaceOnlyContentArea.bc REPLACING === === BY ===*===.
