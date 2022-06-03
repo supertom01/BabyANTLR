@@ -207,11 +207,6 @@ public class Node {
     }
 
     @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
     public String toString() {
         String thisNode = String.format("%2d: %s%n", this.level, this.value);
         StringBuilder children = new StringBuilder();

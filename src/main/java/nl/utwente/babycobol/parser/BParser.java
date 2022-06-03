@@ -7,6 +7,7 @@ import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
 import nl.utwente.babycobol.preprocessor.Line;
 import nl.utwente.babycobol.preprocessor.PreProcessor;
+import nl.utwente.babycobol.validation.PrettyPrinter;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -90,13 +91,16 @@ public class BParser {
     }
 
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
+        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\fib_bad.bc");
         BParser parser = new BParser();
         String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {
             ParseTree tree = parser.process(file, outputFile);
 //            parser.visualizeTree(tree);
             Node root = parser.doSufficientQualification(tree);
+            PrettyPrinter printer = new PrettyPrinter(root);
+            String prettyCode = printer.process(tree);
+            System.out.print(prettyCode);
         } catch (IOException e) {
             System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
             System.exit(0);

@@ -31,7 +31,9 @@ public boolean isIdentifier() {
 
 program: identificationDivision (dataDivision)? (procedureDivision)?;
 
-identificationDivision: IDENTIFICATION_DIVISION '.' (~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+ '.' ~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+ '.')+;
+identificationDivision: IDENTIFICATION_DIVISION '.' (identificationDeclaration '.' identificationDeclaration '.')+;
+
+identificationDeclaration: ~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+;
 
 dataDivision: DATA_DIVISION '.' (declaration '.')+;
 
@@ -47,32 +49,38 @@ sentence: statement+ '.';
 
 statement: {!isIdentifier()}? ACCEPT identifier+                                                       #AcceptStatement
          | {!isIdentifier()}? ALTER procedureName TO_PROCEED_TO procedureName                          #AlterStatement
-         | {!isIdentifier()}? DISPLAY displayExpression* (WITH_NO_ADVANCING)?                          #DisplayStatement
+         | {!isIdentifier()}? DISPLAY displayExpression+ (WITH_NO_ADVANCING)?                          #DisplayStatement
          | {!isIdentifier()}? GO_TO procedureName                                                      #GoToStatement
-         | {!isIdentifier()}? IF booleanExpression THEN statement+ (ELSE statement+)? END?             #IfStatement
-         | {!isIdentifier()}? LOOP loopBody* END                                                       #LoopStatement
+         | {!isIdentifier()}? IF booleanExpression thenExpression elseExpression? END?                 #IfStatement
+         | {!isIdentifier()}? LOOP loopBody+ END                                                       #LoopStatement
          | {!isIdentifier()}? MOVE moveExpression TO identifier+                                       #MoveStatement
-         | {!isIdentifier()}? NEXT sentence                                                            #NextSentenceStatement
+         | {!isIdentifier()}? NEXT SENTENCE                                                            #NextSentenceStatement
          | {!isIdentifier()}? PERFORM procedureName (THROUGH procedureName)? (atomic TIMES)?           #PerformStatement
          | {!isIdentifier()}? SIGNAL (OFF | procedureName) ON_ERROR                                    #SignalStatement
          | {!isIdentifier()}? STOP                                                                     #StopStatement
-         | atomicExpression                                                         #AtomicStatement
+         | atomicExpression                                                                            #AtomicStatement
          ;
 
 atomicExpression: {!isIdentifier()}? ADD atomic+ TO atomic (GIVING identifier)?                                #addExpression
                 | {!isIdentifier()}? DIVIDE atomic INTO atomic+ (GIVING identifier)? (REMAINDER identifier)?   #divideExpression
-                | {!isIdentifier()}? EVALUATE anyExpression (whenBlock statement+)* END                        #evaluateExpression
+                | {!isIdentifier()}? EVALUATE anyExpression caseExpression* END                                #evaluateExpression
                 | {!isIdentifier()}? MULTIPLY atomic BY atomic+ (GIVING identifier)?                           #multiplyExpression
                 | {!isIdentifier()}? SUBTRACT atomic+ FROM atomic (GIVING identifier)?                         #substractExpression
                 ;
 
 displayExpression: atomic (DELIMITED_BY (SPACE | SIZE | literal))?;
 
+thenExpression: THEN statement+;
+
+elseExpression: ELSE statement+;
+
 moveExpression: atomic
               | {!isIdentifier()}? HIGH_VALUES
               | {!isIdentifier()}? LOW_VALUES
               | {!isIdentifier()}? SPACES
               ;
+
+caseExpression: whenBlock statement+;
 
 whenBlock: {!isIdentifier()}? WHEN atomic+
          | {!isIdentifier()}? WHEN OTHER
@@ -101,7 +109,7 @@ booleanExpression: {!isIdentifier()}? TRUE
 loopBody: {!isIdentifier()}? VARYING identifier? (FROM atomic)? (TO atomic)? (BY atomic)?          #VaryingCondition
         | {!isIdentifier()}? WHILE booleanExpression                                               #WhileCondition
         | {!isIdentifier()}? UNTIL booleanExpression                                               #TillCondition
-        | statement                                                             #GIVEANICENAME
+        | statement                                                                                #NoCondition
         ;
 
 comparisonOperator: EQUALS | GT | LT | GE | LE

@@ -164,3 +164,6 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
   the internal workings the offset is usually now lost before the code enters the parser. This should however not
   matter since column based parsing is done by the pre-processor and is taken core of BEFORE the handling of the copy
   statement.
+* Created a basic pretty printer, this can be used for quick debugging. Keywords can quickly be recognized since they're
+  upper-cased, whereas identifiers are upper-cased.
+* FIXME: The line numbers in error messages seem always to be 1. (At least for fib_bad.bc)

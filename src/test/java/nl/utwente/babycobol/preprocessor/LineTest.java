@@ -21,10 +21,10 @@ class LineTest {
 
     @BeforeEach
     void setUp() {
-        comment = new Line("123456", "*", "Hell", "o how are you doing?", "", 1);
-        code = new Line("", " ", "INDE", "NTIFICATION DIVISION.", "", 35);
-        continuation = new Line("123456", "-", "    ", "ST.", "", 2);
-        invalid = new Line("123456", "?", "    ", "COMPUTE 5 * 5.", "", 3);
+        comment = new Line("123456", "*", "Hell", "o how are you doing?", "", 1, "");
+        code = new Line("", " ", "INDE", "NTIFICATION DIVISION.", "", 35, "");
+        continuation = new Line("123456", "-", "    ", "ST.", "", 2, "");
+        invalid = new Line("123456", "?", "    ", "COMPUTE 5 * 5.", "", 3, "");
         merge1 = Line.mergeLines(comment, code);
         merge2 = Line.mergeLines(code, continuation);
     }
@@ -69,8 +69,8 @@ class LineTest {
 
     @Test
     public void testGetLineNumbersMerged() {
-        assertEquals(-1, merge1.getLineNumber());
-        assertEquals(-1, merge2.getLineNumber());
+        assertEquals(1, merge1.getLineNumber());
+        assertEquals(35, merge2.getLineNumber());
         Set<Integer> lines1 = new HashSet<>();
         Set<Integer> lines2 = new HashSet<>();
         for (int line : merge1.getLineNumbers()) {

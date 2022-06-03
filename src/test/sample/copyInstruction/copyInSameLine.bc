@@ -9,5 +9,5 @@
        PROCEDURE DIVISION.
        MAIN.
            IF X = 5 THEN COPY importableFiles/toCopy.bc REPLACING ===FOO
-      -=== BY ===X=== ===A OF D=== BY ===X=== ELSE DISPLAY Y.
-       STOP.
+      -.=== BY ===X=== ===A OF D.=== BY ===X=== ELSE DISPLAY Y.
+       STOP
