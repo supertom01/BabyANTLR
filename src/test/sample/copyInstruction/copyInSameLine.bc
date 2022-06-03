@@ -1,6 +1,6 @@
        IDENTIFICATION DIVISION.
-           PROGRAM-ID. File that will execute a with other statemen
-      -s in the same line; The statements should be preserved.
+           PROGRAM-ID. File that will execute a copy with other statemen
+      -ts in the same line; The statements should be preserved.
            DATE. 02-06-2022.
            AUTHOR. Tom Meulenkamp.
        DATA DIVISION.

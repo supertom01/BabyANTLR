@@ -4,7 +4,8 @@ options {
     caseInsensitive = true;
 }
 
-line: (~COPY)* (copy (~COPY)*?)*;
+line: notCopy (copy notCopy)*;
+notCopy: (~COPY)*?;
 
 copy: COPY FILENAME (REPLACING (LITERAL BY LITERAL)+)?;
 
@@ -13,8 +14,8 @@ FILENAME: ([A-Z0-9_-] | '\\' | '/')+ '.BC';
 REPLACING: 'REPLACING';
 BY: 'BY';
 LITERAL: QUOTE .*? QUOTE;
-WS: [\t\r\n ]+ -> skip;
+WS: [\t\r\n ]+ -> channel(HIDDEN);
 OTHER: ~[ \t\r\n.]+;
-DOT: '.' -> skip;
+DOT: '.';
 
 fragment QUOTE: '===';

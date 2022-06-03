@@ -90,12 +90,12 @@ public class BParser {
     }
 
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\replaceSpace.bc");
+        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
         BParser parser = new BParser();
         String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {
             ParseTree tree = parser.process(file, outputFile);
-            parser.visualizeTree(tree);
+//            parser.visualizeTree(tree);
             Node root = parser.doSufficientQualification(tree);
         } catch (IOException e) {
             System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());

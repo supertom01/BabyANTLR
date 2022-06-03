@@ -2,20 +2,19 @@ package nl.utwente.babycobol.preprocessor;
 
 import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
+import nl.utwente.babycobol.parser.errorListeners.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.InputMismatchException;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CopyStatement extends BabyCobolPreProcessorBaseListener {
 
@@ -24,24 +23,38 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
     private ParseTreeProperty<List<Line>> lines;
 
     private String workingDirectory;
+    private String fileName;
 
-    public CopyStatement(String workingDirectory) {
+    /**
+     * Parses a line in a file, that may contain a copy statement.
+     * @param file The file that is currently being processed.
+     */
+    public CopyStatement(File file) {
         this.errors = new ArrayList<>();
         this.lines = new ParseTreeProperty<>();
-        this.workingDirectory = workingDirectory;
+        this.workingDirectory = file.getParent();
+        this.fileName = file.getAbsolutePath();
     }
 
     public List<Line> process(Line line) throws ParseException {
         Lexer lexer = new BabyCobolPreProcessorLexer(CharStreams.fromString(line.contentArea()));
         BabyCobolPreProcessorParser parser = new BabyCobolPreProcessorParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
+        parser.setErrorHandler(new BailErrorStrategy());
         parser.addErrorListener(new BabyCobolErrors(new ArrayList<>() {{add(line);}}));
-        ParseTree lineTree = parser.line();
-        (new ParseTreeWalker()).walk(this, lineTree);
-        if (!this.errors.isEmpty()) {
-            throw new ParseException("Failed executing copy statement");
+        try {
+            ParseTree lineTree = parser.line();
+            (new ParseTreeWalker()).walk(this, lineTree);
+            if (!this.errors.isEmpty()) {
+                throw new ParseException("Failed executing copy statement");
+            }
+            return lines.get(lineTree);
+        } catch (RuntimeException e) {
+            if (e.getCause() != null && e.getCause() instanceof InputMismatchException) {
+                return null;
+            }
+            throw e;
         }
-        return lines.get(lineTree);
     }
 
     public List<String> getErrors() {
@@ -51,13 +64,20 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
     @Override
     public void exitLine(BabyCobolPreProcessorParser.LineContext ctx) {
         List<Line> lines = new ArrayList<>();
-        for (BabyCobolPreProcessorParser.CopyContext copy : ctx.copy()) {
-            List<Line> copyLines = this.lines.get(copy);
-            if (copyLines != null) {
-                lines.addAll(copyLines);
+        for (ParseTree child : ctx.children) {
+            List<Line> childLines = this.lines.get(child);
+            if (childLines != null) {
+                lines.addAll(childLines);
             }
         }
         this.lines.put(ctx, lines);
+    }
+
+    @Override
+    public void exitNotCopy(BabyCobolPreProcessorParser.NotCopyContext ctx) {
+        String code = ctx.getStart().getInputStream().getText(Interval.of(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex()));
+        Line line = new Line("", " ", "", code, "", ctx.getStart().getLine(), this.fileName);
+        this.lines.put(ctx, new ArrayList<>() {{add(line);}});
     }
 
     @Override

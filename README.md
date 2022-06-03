@@ -13,6 +13,9 @@ The goal of this project is different: take one language framework (good lists c
 [this paper](https://doi.org/10.1016/j.cl.2015.08.007) in §4), implement whatever you can in it and report on 
 difficulties. Sounds easy, right? Well, perhaps all this talk about BabyCobol being a nightmare is just for show…
 
+# Setup Instructions
+TODO: Write instructions
+
 # BabyCobol Language
 Beneath one will find a quick and very brief language reference of the BabyCobol language.
 

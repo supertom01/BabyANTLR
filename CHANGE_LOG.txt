@@ -151,3 +151,16 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
      done by the tool, however this is fully automated and cannot be altered by normal means.
 * There was a small issue where sufficient qualification was not recognized any longer. But this happened due to possible
   ambiguity. The fix was to reorder the possible identifier statements.
+
+02-06-2022:
+* When using replace in the copy statement, only the content area is searched and replaced for if a match is found. All
+  other areas remain untouched.
+* Still working on the division of the line when a copy statement is found. There is currently a problem with get all
+  the original lines outside the copy statement. But the inputstream should solve this, since it contains the original
+  input, including whitespace.
+
+03-06-2022:
+* Copy is now only replacing the statement itself, and not the entire line when the code is inserted. However, due to
+  the internal workings the offset is usually now lost before the code enters the parser. This should however not
+  matter since column based parsing is done by the pre-processor and is taken core of BEFORE the handling of the copy
+  statement.
