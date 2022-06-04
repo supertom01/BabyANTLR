@@ -139,7 +139,7 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 * Error messages always include the file name of the original file, and the correct line numbers. Additionally they have
   the erroring toking underlined.
   -> TODO: Sometimes, however, we have an expression that is broken and not just a token. We still have to fix this,
-      since only tokens are supported for now.
+           since only tokens are supported for now.
 
 31-05-2022:
 * Implemented keywords as identifiers, but only with limited functionality. Identifiers that are used as keywords cannot
@@ -171,3 +171,6 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 04-06-2022:
 * Fixed the previous mentioned issue that line numbers where always 1. (Happened due to the new implementation for the
   handling of the copy statement.)
+* FIXME: A new issue was found, probably the copy parser cannot deal with empty lines (better said, empty content areas)
+         this should be fixed.
+  -> Fixed. The pre-processor (Java regex) apparently does not like empty. If a line is empty, it is now simply skipped.

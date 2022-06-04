@@ -131,6 +131,9 @@ public class PreProcessor {
                             "status indicator. Only use \" \", \"*\", \"-\".", line.getLineNumbers()[0], line.getIndicator()));
                 }
             } else {
+                if (this.source_code[i].replace(" ", "").equals("")) {
+                    continue;
+                }
                 this.errors.add(String.format("Line %d: Failed to parse", i + 1));
             }
         }
