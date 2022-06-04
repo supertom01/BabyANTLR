@@ -6,6 +6,10 @@
        DATA DIVISION.
            01 X PICTURE IS 99.
            01 Y PICTURE IS 99.
+           01 CONTAINER.
+             03 Z PICTURE IS XX.
+             02 U LIKE Z.
+           01 V LIKE U.
        PROCEDURE DIVISION.
        MAIN.
            IF X = 5 THEN COPY importableFiles/toCopy.bc REPLACING ===FOO

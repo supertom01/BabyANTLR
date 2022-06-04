@@ -31,13 +31,9 @@ public class BParser {
      * Takes a BabyCobol source file as input, runs the preprocessor over it and afterwards runs the ANTLR parser.
      * @param sourceFile A file containing code written in BabyCobol.
      */
-    public ParseTree process(File sourceFile, String outputFile) throws IOException {
-        this.lines = preProcess(sourceFile);
-        return parse(lines, outputFile);
-    }
-
     public ParseTree process(File sourceFile) throws IOException {
-        return process(sourceFile, null);
+        this.lines = preProcess(sourceFile);
+        return parse(lines);
     }
 
     public List<Line> preProcess(File sourceFile) throws IOException {
@@ -49,17 +45,10 @@ public class BParser {
         return preProcessor.getLines();
     }
 
-    public ParseTree parse(List<Line> lines, String outputFile) {
+    public ParseTree parse(List<Line> lines) {
         StringBuilder code = new StringBuilder();
         for (Line line : lines) {
             code.append(line.getClean());
-        }
-        if (outputFile != null) {
-            try (FileWriter writer = new FileWriter(outputFile)) {
-                writer.write(code.toString());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
         CharStream stream = CharStreams.fromString(code.toString());
         Lexer lexer = new BabyCobolLexer(stream);
@@ -91,16 +80,15 @@ public class BParser {
     }
 
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\fib_bad.bc");
+        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
         BParser parser = new BParser();
         String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
         try {
-            ParseTree tree = parser.process(file, outputFile);
+            ParseTree tree = parser.process(file);
 //            parser.visualizeTree(tree);
             Node root = parser.doSufficientQualification(tree);
-            PrettyPrinter printer = new PrettyPrinter(root);
-            String prettyCode = printer.process(tree);
-            System.out.print(prettyCode);
+            PrettyPrinter printer = new PrettyPrinter();
+            printer.processToFile(tree, new File(outputFile));
         } catch (IOException e) {
             System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
             System.exit(0);

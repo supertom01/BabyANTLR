@@ -3,31 +3,59 @@ package nl.utwente.babycobol.validation;
 import nl.utwente.babycobol.data.Node;
 import nl.utwente.babycobol.parser.BabyCobolBaseListener;
 import nl.utwente.babycobol.parser.BabyCobolParser;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class PrettyPrinter extends BabyCobolBaseListener {
 
-    public static int AREA_A_OFFSET = 7;
-    public static int AREA_B_OFFSET = 12;
+    private final ParseTreeProperty<String> lines;
 
-    private Node variableRoot;
-
-    private ParseTreeProperty<String> lines;
-
-    public PrettyPrinter(Node variableRoot) {
+    public PrettyPrinter() {
         this.lines = new ParseTreeProperty<>();
-        this.variableRoot = variableRoot;
     }
 
     public String process(ParseTree program) {
         (new ParseTreeWalker()).walk(this, program);
         return this.lines.get(program);
+    }
+
+    public void processToFile(ParseTree program, File outputFile) {
+        String code = this.process(program);
+        try (FileWriter writer = new FileWriter(outputFile)) {
+            writer.write(code);
+        } catch (IOException e) {
+            System.err.printf("Couldn't find output file for pretty printer: %s%n", e.getMessage());
+        }
+    }
+
+    public String doLine(String text, boolean isAreaA) {
+        String line = " ".repeat(7);
+        if (!isAreaA) {
+            line += " ".repeat(4);
+        }
+        line += text;
+        if (line.length() > 72) {
+            String brokenLines = "";
+            double iters = Math.ceil(line.length() / 72.0);
+            for (int i = 0; i < iters; i++) {
+                brokenLines += line.substring(i * 72, Math.min((i + 1) * 72, line.length()));
+
+                if (i + 1 != iters) {
+                    brokenLines += System.lineSeparator();
+                    brokenLines += " ".repeat(6) + "-";
+                }
+            }
+            line = brokenLines;
+        }
+        line += System.lineSeparator();
+        return line;
     }
 
     @Override
@@ -46,16 +74,11 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     @Override
     public void exitIdentificationDivision(BabyCobolParser.IdentificationDivisionContext ctx) {
         StringBuilder identificationDivision = new StringBuilder();
-        identificationDivision.append(" ".repeat(AREA_A_OFFSET));
-        identificationDivision.append("IDENTIFICATION DIVISION.");
-        identificationDivision.append(System.lineSeparator());
+        identificationDivision.append(doLine("IDENTIFICATION DIVISION.", true));
         for (int i = 0; i < ctx.identificationDeclaration().size(); i += 2) {
-            identificationDivision.append(" ".repeat(AREA_B_OFFSET));
-            identificationDivision.append(this.lines.get(ctx.identificationDeclaration(i)));
-            identificationDivision.append(". ");
-            identificationDivision.append(this.lines.get(ctx.identificationDeclaration(i + 1)));
-            identificationDivision.append(".");
-            identificationDivision.append(System.lineSeparator());
+            String declaration = String.format("%s. %s.", this.lines.get(ctx.identificationDeclaration(i)),
+                    this.lines.get(ctx.identificationDeclaration(i + 1)));
+            identificationDivision.append(doLine(declaration, false));
         }
         this.lines.put(ctx, identificationDivision.toString());
     }
@@ -68,33 +91,19 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     @Override
     public void exitDataDivision(BabyCobolParser.DataDivisionContext ctx) {
         StringBuilder dataDivision = new StringBuilder();
-        dataDivision.append(" ".repeat(AREA_A_OFFSET));
-        dataDivision.append("DATA DIVISION.");
-        dataDivision.append(System.lineSeparator());
-        int currentLevel = -1;
-        int extraSpaces = 0;
+        dataDivision.append(doLine("DATA DIVISION.", true));
         for (BabyCobolParser.DeclarationContext declaration : ctx.declaration()) {
             int level = Integer.parseInt(declaration.INTEGER().getText());
-            if (currentLevel == -1) {
-                currentLevel = level;
-            } else if (currentLevel < level) {
-                currentLevel = level;
-                extraSpaces++;
-            } else if (currentLevel > level) {
-                currentLevel = level;
-                extraSpaces--;
-            }
-            dataDivision.append(" ".repeat(AREA_B_OFFSET));
-            dataDivision.append(" ".repeat(extraSpaces * 2));
-            dataDivision.append(String.format("%02d", level)).append(" ");
+            StringBuilder decl = new StringBuilder();
+            decl.append(String.format("%02d", level)).append(" ");
             if (declaration.ID() != null) {
-                dataDivision.append(declaration.ID().toString().toLowerCase());
+                decl.append(declaration.ID().toString().toLowerCase());
             } else {
-                dataDivision.append(declaration.keywords().toString().toLowerCase());
+                decl.append(declaration.keywords().toString().toLowerCase());
             }
-            dataDivision.append(this.lines.get(declaration.typeDeclaration()));
-            dataDivision.append(".");
-            dataDivision.append(System.lineSeparator());
+            decl.append(this.lines.get(declaration.typeDeclaration()));
+            decl.append(".");
+            dataDivision.append(doLine(decl.toString(), false));
         }
         this.lines.put(ctx, dataDivision.toString());
     }
@@ -122,26 +131,21 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     @Override
     public void exitProcedureDivision(BabyCobolParser.ProcedureDivisionContext ctx) {
         StringBuilder procedureDivision = new StringBuilder();
-        procedureDivision.append(" ".repeat(AREA_A_OFFSET));
-        procedureDivision.append("PROCEDURE DIVISION.");
-        procedureDivision.append(System.lineSeparator());
+        procedureDivision.append(doLine("PROCEDURE DIVISION.", true));
         for (BabyCobolParser.SentenceContext sentence : ctx.sentence()) {
             procedureDivision.append(this.lines.get(sentence));
         }
         for (BabyCobolParser.ParagraphContext paragraph : ctx.paragraph()) {
             procedureDivision.append(this.lines.get(paragraph));
         }
-        procedureDivision.append(" ".repeat(AREA_A_OFFSET)).append("STOP");
+        procedureDivision.append(doLine("STOP", true));
         this.lines.put(ctx, procedureDivision.toString());
     }
 
     @Override
     public void exitParagraph(BabyCobolParser.ParagraphContext ctx) {
         StringBuilder paragraph = new StringBuilder();
-        paragraph.append(" ".repeat(AREA_A_OFFSET));
-        paragraph.append(this.lines.get(ctx.paragraphName()));
-        paragraph.append(".");
-        paragraph.append(System.lineSeparator());
+        paragraph.append(doLine(this.lines.get(ctx.paragraphName()) + ".", true));
         for (BabyCobolParser.SentenceContext sentence : ctx.sentence()) {
             paragraph.append(this.lines.get(sentence));
         }
@@ -152,10 +156,7 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     public void exitSentence(BabyCobolParser.SentenceContext ctx) {
         StringBuilder sentence = new StringBuilder();
         for (BabyCobolParser.StatementContext statement : ctx.statement()) {
-            sentence.append(" ".repeat(AREA_B_OFFSET));
-            sentence.append(this.lines.get(statement));
-            sentence.append(".");
-            sentence.append(System.lineSeparator());
+            sentence.append(doLine(this.lines.get(statement) + ".", false));
         }
         this.lines.put(ctx, sentence.toString());
     }

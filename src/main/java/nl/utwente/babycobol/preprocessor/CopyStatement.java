@@ -22,6 +22,8 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
 
     private ParseTreeProperty<List<Line>> lines;
 
+    private Line line;
+
     private String workingDirectory;
     private String fileName;
 
@@ -37,6 +39,7 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
     }
 
     public List<Line> process(Line line) throws ParseException {
+        this.line = line;
         Lexer lexer = new BabyCobolPreProcessorLexer(CharStreams.fromString(line.contentArea()));
         BabyCobolPreProcessorParser parser = new BabyCobolPreProcessorParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
@@ -76,7 +79,7 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
     @Override
     public void exitNotCopy(BabyCobolPreProcessorParser.NotCopyContext ctx) {
         String code = ctx.getStart().getInputStream().getText(Interval.of(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex()));
-        Line line = new Line("", " ", "", code, "", ctx.getStart().getLine(), this.fileName);
+        Line line = new Line("", " ", "", code, "", this.line.getLineNumber(), this.fileName);
         this.lines.put(ctx, new ArrayList<>() {{add(line);}});
     }
 

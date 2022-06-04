@@ -167,3 +167,7 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 * Created a basic pretty printer, this can be used for quick debugging. Keywords can quickly be recognized since they're
   upper-cased, whereas identifiers are upper-cased.
 * FIXME: The line numbers in error messages seem always to be 1. (At least for fib_bad.bc)
+
+04-06-2022:
+* Fixed the previous mentioned issue that line numbers where always 1. (Happened due to the new implementation for the
+  handling of the copy statement.)
