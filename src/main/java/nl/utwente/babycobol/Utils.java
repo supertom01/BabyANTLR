@@ -16,18 +16,15 @@ public class Utils {
         }
 
         String message;
-        Line line = lines.get(token.getLine() - 1);
-        int charPos = token.getCharPositionInLine();
+        Line lineObj = lines.get(token.getLine() - 1);
+        int charPos = token.getCharPositionInLine() % 72;
+        int line = lineObj.getLineNumbers()[token.getCharPositionInLine() / 72];
         int start = token.getStartIndex();
         int end = token.getStopIndex();
-        if (line.getLineNumbers().length == 1) {
-            message = String.format("[%s] line %d:%d %s%n", line.getFileName(), line.getLineNumber(),
-                    token.getCharPositionInLine(), errorMessage);
-        } else {
-            message = String.format("[%s] lines %s:%d %s%n", line.getFileName(),
-                    Arrays.toString(line.getLineNumbers()), token.getCharPositionInLine(), errorMessage);
-        }
-        String errorLine = String.format("%s%n%s%s", line, " ".repeat(charPos), "^".repeat(end - start + 1));
+        message = String.format("[%s] line %d:%d %s%n", lineObj.getFileName(), line, charPos, errorMessage);
+        String errorLine = String.format("%s%n%s%s", lineObj.toErrorString(line),
+                " ".repeat(token.getCharPositionInLine()), "^".repeat(end - start + 1));
+
         return message + errorLine;
     }
 

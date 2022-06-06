@@ -1,0 +1,11 @@
+       IDENTIFICATION DIVISION.
+           Author. Tom Meulenkamp.
+       DATA DIVISION.
+           01 abcdefghijklmnopqrstuvwxyz PICTURE IS 9.
+       PROCEDURE DIVISION.
+           DISPLAY abcdefghijklmnopqrstuvwxyz abcdefghijklmnopqrstuvw xy
+      -z abcdefghijklmnopqrstuvwxyz a b c d e f g h i j k l m n o p q r
+      -s t u v w.
+       MAIN-PROGRAMME.
+           DISPLAY A.
+       STOP

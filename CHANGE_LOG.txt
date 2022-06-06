@@ -185,3 +185,4 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 * On 4-6 mentioned that the preprocessor didn't like empty lines. It couldn't handle an empty B area either. This is now
   completely fixed. The regex apparently required the columns to be filled, this is no longer needed in order to
   generate a match.
+* Error messages contain the correct character positions inside a line, even if this line was continued.

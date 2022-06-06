@@ -152,6 +152,10 @@ public class Line {
         return this.fileName;
     }
 
+    public String toErrorString(int lineNumber) {
+        return String.format("%06d", lineNumber) + this.indicator + sectionA + sectionB + ignored;
+    }
+
     @Override
     public String toString() {
         return String.format("%06d", this.getLineNumber()) + this.indicator + sectionA + sectionB + ignored;
