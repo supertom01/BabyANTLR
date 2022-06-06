@@ -104,6 +104,9 @@ public class QualificationChecker extends BabyCobolBaseListener {
             if (!this.variables.containsValue(identifier)) {
                 String errorMsg = String.format("Implicit definition for field %s.", identifier);
                 addWarning(identifierToken, errorMsg);
+                Node node = new Node(identifier, 1, true);
+                this.variables.addChild(node);
+                this.variableNode.put(ctx, node);
                 return;
             }
 
@@ -173,7 +176,7 @@ public class QualificationChecker extends BabyCobolBaseListener {
             addError(identifierToken, errorMsg);
         } else if (parent.isField()) {
             // The parent is a field, from which we cannot qualify.
-            String errorMsg = String.format("The string %s points to a field and not a container.", containerName);
+            String errorMsg = String.format("The identifier %s points to a field and not a container.", containerName);
             addError(identifierToken, errorMsg);
         } else if (!parent.containsValue(identifier)) {
             // The container exists, but does not hold the identifier.
@@ -191,7 +194,7 @@ public class QualificationChecker extends BabyCobolBaseListener {
                 if (containerNodes.size() == 1) {
                     variableNode.put(ctx, containerNodes.get(0));
                 } else if (containerNodes.size() == 0) {
-                    String errorMsg = String.format("The string %s points to a field and not a container.", identifier);
+                    String errorMsg = String.format("The identifier %s points to a field and not a container.", identifier);
                     addError(identifierToken, errorMsg);
                 } else {
                     // TODO: Solve ambiguity by checking if it is a direct child or give an error message
@@ -206,7 +209,7 @@ public class QualificationChecker extends BabyCobolBaseListener {
                 if (fieldNodes.size() == 1) {
                     variableNode.put(ctx, fieldNodes.get(0));
                 } else if (fieldNodes.size() == 0) {
-                    String errorMsg = String.format("The string %s points to a container and not a field.", identifier);
+                    String errorMsg = String.format("The identifier %s points to a container and not a field.", identifier);
                     addError(identifierToken, errorMsg);
                 } else {
                     // TODO: Solve ambiguity by checking if it is a direct child or give an error message

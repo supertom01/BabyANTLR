@@ -17,12 +17,11 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class BParser {
+public class Parser {
 
     private List<Line> lines;
     private BabyCobolParser parser;
@@ -53,8 +52,8 @@ public class BParser {
         CharStream stream = CharStreams.fromString(code.toString());
         Lexer lexer = new BabyCobolLexer(stream);
         this.parser = new BabyCobolParser(new CommonTokenStream(lexer));
-        parser.removeErrorListeners();
-        parser.addErrorListener(new BabyCobolErrors(lines));
+        this.parser.removeErrorListeners();
+        this.parser.addErrorListener(new BabyCobolErrors(lines));
         return parser.program();
     }
 
@@ -79,22 +78,22 @@ public class BParser {
         (new TreeViewer(Arrays.asList(parser.getRuleNames()),tree)).open();
     }
 
-    public static void main(String[] args) {
-        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
-        BParser parser = new BParser();
-        String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
-        try {
-            ParseTree tree = parser.process(file);
-//            parser.visualizeTree(tree);
-            Node root = parser.doSufficientQualification(tree);
-            PrettyPrinter printer = new PrettyPrinter();
-            printer.processToFile(tree, new File(outputFile));
-        } catch (IOException e) {
-            System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
-            System.exit(0);
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
-        }
-    }
+//    public static void main(String[] args) {
+//        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
+//        Parser parser = new Parser();
+//        String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
+//        try {
+//            ParseTree tree = parser.process(file);
+////            parser.visualizeTree(tree);
+//            Node root = parser.doSufficientQualification(tree);
+//            PrettyPrinter printer = new PrettyPrinter();
+//            printer.processToFile(tree, new File(outputFile));
+//        } catch (IOException e) {
+//            System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
+//            System.exit(0);
+//        } catch (ParseException e) {
+//            System.err.println(e.getMessage());
+//        }
+//    }
 
 }

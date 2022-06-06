@@ -1,0 +1,31 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. SUFFICIENT-QUALIFICATION.
+           AUTHOR. TOM MEULENKAMP.
+           DATE. 23-05-2022.
+       DATA DIVISION.
+           10 section-1.
+           15 a.
+           16 b PICTURE IS XX(2)V-9.
+           11 b.
+           12 z.
+           20 u PICTURE IS 9(4)V99.
+           13 c LIKE section-1.
+           10 section-2.
+           15 u PICTURE IS XX.
+           15 x OCCURS 20 TIMES.
+           15 y.
+           16 s LIKE b OF section-1.
+           16 z LIKE b OF a OF section-1.
+           16 w LIKE u OF section-2.
+       PROCEDURE DIVISION.
+       main.
+           DISPLAY b.
+           DISPLAY c.
+           DISPLAY u OF section-1.
+           DISPLAY u OF b.
+           DISPLAY u OF z OF b OF section-1.
+           DISPLAY u OF section-2.
+           DISPLAY u OF z OF s OF y OF section-2.
+           DISPLAY u OF y.
+       STOP
+

@@ -1,6 +1,6 @@
        IDENTIFICATION DIVISION.
            COPY importableFiles/defaultHeader.bc REPLACING ===$DATE=== B
-      -Y ===30-05-2022=== ===NAME=== BY ===COPYTest===.
+      -Y ===30-05-2022=== ===NAME=== BY ===COPY test===.
        DATA DIVISION.
            01 A.
             02 B PICTURE IS 99.

@@ -1,0 +1,17 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. File that will execute a copy with other statemen
+      -ts in the same line; The statements should be preserved.
+           DATE. 02-06-2022.
+           AUTHOR. Tom Meulenkamp.
+       DATA DIVISION.
+           01 x PICTURE IS 99.
+           01 y PICTURE IS 99.
+           01 container.
+           03 z PICTURE IS XX.
+           02 u LIKE z.
+           01 v LIKE u.
+       PROCEDURE DIVISION.
+       main.
+           IF x = 5 THEN DISPLAY x DISPLAY x ELSE DISPLAY y END.
+       STOP
+

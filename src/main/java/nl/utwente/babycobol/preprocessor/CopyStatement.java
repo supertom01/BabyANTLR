@@ -78,9 +78,11 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
 
     @Override
     public void exitNotCopy(BabyCobolPreProcessorParser.NotCopyContext ctx) {
-        String code = ctx.getStart().getInputStream().getText(Interval.of(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex()));
-        Line line = new Line("", " ", "", code, "", this.line.getLineNumber(), this.fileName);
-        this.lines.put(ctx, new ArrayList<>() {{add(line);}});
+         if (!ctx.isEmpty() && ctx.getChildCount() != 0) {
+            String code = ctx.getStart().getInputStream().getText(Interval.of(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex()));
+            Line line = new Line("", " ", "", code, "", this.line.getLineNumber(), this.fileName);
+            this.lines.put(ctx, new ArrayList<>() {{add(line);}});
+        }
     }
 
     @Override

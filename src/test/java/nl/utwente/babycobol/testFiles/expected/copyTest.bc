@@ -1,0 +1,28 @@
+       IDENTIFICATION DIVISION.
+           AUTHOR. TOM MEULENKAMP (S2267810).
+           AUTHOR-MAIL. t{dot}meulenkamp@student{dot}utwente{dot}nl.
+           DATE. 30-05-2022.
+           PROGRAM-ID. COPY test.
+       DATA DIVISION.
+           01 a.
+           02 b PICTURE IS 99.
+           02 c PICTURE IS 99.
+           02 d LIKE b.
+           01 d.
+           02 a PICTURE IS 99.
+           02 foo PICTURE IS XXXX.
+           01 person.
+           02 first-name PICTURE IS X(25).
+           02 last-name PICTURE IS X(25).
+           02 place-of-birth.
+           03 country LIKE first-name.
+           03 province LIKE country.
+           03 city LIKE province.
+           02 phone-number PICTURE IS A9(10).
+       PROCEDURE DIVISION.
+       main.
+           DISPLAY foo.
+           DISPLAY a OF x.
+           STOP.
+       STOP
+

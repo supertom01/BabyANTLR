@@ -41,18 +41,20 @@ public class PrettyPrinter extends BabyCobolBaseListener {
             line += " ".repeat(4);
         }
         line += text;
+
+        // Take care of line continuations
         if (line.length() > 72) {
-            String brokenLines = "";
+            StringBuilder brokenLines = new StringBuilder();
             double iters = Math.ceil(line.length() / 72.0);
             for (int i = 0; i < iters; i++) {
-                brokenLines += line.substring(i * 72, Math.min((i + 1) * 72, line.length()));
+                brokenLines.append(line.substring(i * 72, Math.min((i + 1) * 72, line.length())));
 
                 if (i + 1 != iters) {
-                    brokenLines += System.lineSeparator();
-                    brokenLines += " ".repeat(6) + "-";
+                    brokenLines.append(System.lineSeparator());
+                    brokenLines.append(" ".repeat(6)).append("-");
                 }
             }
-            line = brokenLines;
+            line = brokenLines.toString();
         }
         line += System.lineSeparator();
         return line;
@@ -99,7 +101,7 @@ public class PrettyPrinter extends BabyCobolBaseListener {
             if (declaration.ID() != null) {
                 decl.append(declaration.ID().toString().toLowerCase());
             } else {
-                decl.append(declaration.keywords().toString().toLowerCase());
+                decl.append(this.lines.get(declaration.keywords()));
             }
             decl.append(this.lines.get(declaration.typeDeclaration()));
             decl.append(".");
@@ -246,6 +248,7 @@ public class PrettyPrinter extends BabyCobolBaseListener {
             perform.append(this.lines.get(ctx.procedureName(1)));
         }
         if (ctx.TIMES() != null) {
+            perform.append(" ");
             perform.append(this.lines.get(ctx.atomic()));
             perform.append(" TIMES");
         }
@@ -551,6 +554,11 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     @Override
     public void exitNameIdentifier(BabyCobolParser.NameIdentifierContext ctx) {
         this.lines.put(ctx, ctx.getStart().getText().toLowerCase());
+    }
+
+    @Override
+    public void exitKeywords(BabyCobolParser.KeywordsContext ctx) {
+        this.lines.put(ctx, ctx.getText().toLowerCase());
     }
 
     @Override

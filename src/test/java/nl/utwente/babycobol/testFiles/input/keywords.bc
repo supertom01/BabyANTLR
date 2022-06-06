@@ -14,11 +14,11 @@
            01 LiKE LIKE LiKE OF A.
        PROCEDURE DIVISION.
        MAIN.
-      *    LOOP
-      *      DISPLAY for
-      *      WHILE TRUE
-      *      DISPLAY B
-      *    END.
-      *    ADD loop C TO B.
+           LOOP
+             DISPLAY for
+             WHILE TRUE
+             DISPLAY B
+           END.
+           ADD loop C TO B.
            DISPLAY D OF picture OF A.
        STOP.

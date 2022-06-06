@@ -1,0 +1,28 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. FIB.
+           AUTHOR. Anonymous.
+           DATE-WRITTEN. 2019-11-01.
+       DATA DIVISION.
+           01 working-storage-area.
+           05 lim PICTURE IS 99.
+           05 cur PICTURE IS 99999999999999999999.
+           05 last.
+           09 n PICTURE IS 99999999999999999999.
+           09 n1 PICTURE IS 99999999999999999999.
+       PROCEDURE DIVISION.
+           DISPLAY "ENTER THE LIMIT".
+           ACCEPT lim.
+           MOVE SPACES TO cur.
+           MOVE SPACES TO last.
+           DISPLAY n1 OF last.
+           SUBTRACT 1 FROM lim.
+           MOVE 1 TO n OF last.
+           PERFORM print-fib lim TIMES.
+           STOP.
+       print-fib.
+           DISPLAY n OF last.
+           ADD n1 OF last TO n OF last GIVING cur.
+           MOVE n OF last TO n1 OF last.
+           MOVE cur TO n OF last.
+       STOP
+

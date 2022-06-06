@@ -7,7 +7,7 @@ options {
 line: notCopy (copy notCopy)*;
 notCopy: (~COPY)*?;
 
-copy: COPY FILENAME (REPLACING (LITERAL BY LITERAL)+)?;
+copy: COPY FILENAME (REPLACING (LITERAL BY LITERAL)+)? '.'?;
 
 COPY: 'COPY';
 FILENAME: ([A-Z0-9_-] | '\\' | '/')+ '.BC';

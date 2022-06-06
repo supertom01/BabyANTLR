@@ -2,7 +2,10 @@
            AUTHOR. TOM MEULENKAMP.
            PROGRAM-ID. CONTRACTED EXPRESSIONS.
            DATE. 31-5-2022.
+       DATA DIVISION.
+           01 x PICTURE IS 9X.
        PROCEDURE DIVISION.
-       MAIN.
-           IF X = 10 OR 20 THEN
-             DISPLAY X.
+       main.
+           IF x = 10 OR 20 THEN DISPLAY x END.
+       STOP
+

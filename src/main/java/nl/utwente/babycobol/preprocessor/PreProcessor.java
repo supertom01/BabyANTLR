@@ -62,7 +62,7 @@ public class PreProcessor {
         //  8-12 : Section A
         // 13-72 : Section B
         // 73+   : Ignored
-        this.linePattern = Pattern.compile("(.{6})(.)(.{4})(.{0,61})(.*)");
+        this.linePattern = Pattern.compile("(.{0,6})(.)(.{0,4})(.{0,61})(.*)");
     }
 
     public List<Line> getLines() {
