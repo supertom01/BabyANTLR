@@ -14,7 +14,10 @@ The goal of this project is different: take one language framework (good lists c
 difficulties. Sounds easy, right? Well, perhaps all this talk about BabyCobol being a nightmare is just for show…
 
 # Setup Instructions
-TODO: Write instructions
+1. This software requires [Apache Maven](https://maven.apache.org/) in order to function. 
+2. In order to use this software one runs `mvn compile` in order to generate the ANTLR grammars, visitors and listeners. 
+3. With `mvn package` the tests are executed and a JAR file will be packaged. 
+4. This JAR can then be used to run the parser over source files.
 
 # BabyCobol Language
 Beneath one will find a quick and very brief language reference of the BabyCobol language.

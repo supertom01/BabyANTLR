@@ -1,8 +1,8 @@
 package nl.utwente.babycobol.validation;
 
 import nl.utwente.babycobol.data.Node;
-import nl.utwente.babycobol.parser.BabyCobolBaseListener;
-import nl.utwente.babycobol.parser.BabyCobolParser;
+import nl.utwente.babycobol.BabyCobolBaseListener;
+import nl.utwente.babycobol.BabyCobolParser;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;

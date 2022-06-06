@@ -1,8 +1,8 @@
 package nl.utwente.babycobol.data;
 
 import nl.utwente.babycobol.Utils;
-import nl.utwente.babycobol.parser.BabyCobolBaseListener;
-import nl.utwente.babycobol.parser.BabyCobolParser;
+import nl.utwente.babycobol.BabyCobolBaseListener;
+import nl.utwente.babycobol.BabyCobolParser;
 import nl.utwente.babycobol.preprocessor.Line;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;

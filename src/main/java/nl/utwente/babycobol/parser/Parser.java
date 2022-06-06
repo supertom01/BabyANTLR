@@ -1,5 +1,7 @@
 package nl.utwente.babycobol.parser;
 
+import nl.utwente.babycobol.BabyCobolLexer;
+import nl.utwente.babycobol.BabyCobolParser;
 import nl.utwente.babycobol.data.DataStructureGenerator;
 import nl.utwente.babycobol.data.Node;
 import nl.utwente.babycobol.data.QualificationChecker;
@@ -7,7 +9,6 @@ import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
 import nl.utwente.babycobol.preprocessor.Line;
 import nl.utwente.babycobol.preprocessor.PreProcessor;
-import nl.utwente.babycobol.validation.PrettyPrinter;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -77,23 +78,5 @@ public class Parser {
     public void visualizeTree(ParseTree tree) {
         (new TreeViewer(Arrays.asList(parser.getRuleNames()),tree)).open();
     }
-
-//    public static void main(String[] args) {
-//        File file = new File("C:\\Users\\meule\\IdeaProjects\\BabyCobol\\src\\test\\sample\\copyInstruction\\copyInSameLine.bc");
-//        Parser parser = new Parser();
-//        String outputFile = "C:/Users/meule/IdeaProjects/BabyCobol/output.bc";
-//        try {
-//            ParseTree tree = parser.process(file);
-////            parser.visualizeTree(tree);
-//            Node root = parser.doSufficientQualification(tree);
-//            PrettyPrinter printer = new PrettyPrinter();
-//            printer.processToFile(tree, new File(outputFile));
-//        } catch (IOException e) {
-//            System.err.printf("[ERROR] Couldn't open file %s%n", e.getMessage());
-//            System.exit(0);
-//        } catch (ParseException e) {
-//            System.err.println(e.getMessage());
-//        }
-//    }
 
 }

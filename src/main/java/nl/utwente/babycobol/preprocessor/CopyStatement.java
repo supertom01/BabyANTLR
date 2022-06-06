@@ -1,5 +1,8 @@
 package nl.utwente.babycobol.preprocessor;
 
+import nl.utwente.babycobol.BabyCobolPreProcessorBaseListener;
+import nl.utwente.babycobol.BabyCobolPreProcessorLexer;
+import nl.utwente.babycobol.BabyCobolPreProcessorParser;
 import nl.utwente.babycobol.exceptions.ParseException;
 import nl.utwente.babycobol.parser.errorListeners.BabyCobolErrors;
 import nl.utwente.babycobol.parser.errorListeners.BailErrorStrategy;

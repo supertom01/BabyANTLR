@@ -1,5 +1,7 @@
 package nl.utwente.babycobol.parser;
 
+import nl.utwente.babycobol.BabyCobolLexer;
+import nl.utwente.babycobol.BabyCobolParser;
 import nl.utwente.babycobol.data.DataStructureGenerator;
 import nl.utwente.babycobol.data.Node;
 import nl.utwente.babycobol.data.QualificationChecker;
