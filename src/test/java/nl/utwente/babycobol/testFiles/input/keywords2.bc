@@ -1,0 +1,10 @@
+       IDENTIFICATION DIVISION.
+           Author. Tom Meulenkamp.
+       DATA DIVISION.
+           01 X PICTURE IS 9.
+       PROCEDURE DIVISION.
+      * Fails since 'if' is seen as the start of an if statement and not
+      *the name of a paragraph.
+       if.
+           DISPLAY X.
+       STOP

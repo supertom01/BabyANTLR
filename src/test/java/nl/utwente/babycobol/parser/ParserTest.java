@@ -34,7 +34,10 @@ public class ParserTest {
     private List<String> qualificationErrors;
     private List<String> qualificationWarnings;
 
-    public void testFile(String inputFile, String expectedFile) {
+    public void testFile(String inputFile, String expectedFile, boolean compareFiles) {
+        long startTime;
+        long endTime;
+
         File input = new File(SOURCE_DIR + inputFile);
         File expected = new File(SOURCE_DIR + expectedFile);
         List<Line> lines;
@@ -42,6 +45,7 @@ public class ParserTest {
         Node variableRoot;
         String prettyCode;
 
+        startTime = System.currentTimeMillis();
         // Run the pre-processor
         try {
             PreProcessor preProcessor = new PreProcessor(input);
@@ -51,7 +55,10 @@ public class ParserTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        endTime = System.currentTimeMillis();
+        System.out.printf("Preprocessing took %d ms%n", endTime - startTime);
 
+        startTime = System.currentTimeMillis();
         // Run the parser
         StringBuilder code = new StringBuilder();
         for (Line line : lines) {
@@ -65,30 +72,45 @@ public class ParserTest {
         parser.addErrorListener(errorListener);
         this.parserErrors = errorListener.getErrors();
         program = parser.program();
+        endTime = System.currentTimeMillis();
+        System.out.printf("Parsing took %d ms%n", endTime - startTime);
 
+        startTime = System.currentTimeMillis();
         // Check if sufficient qualification has been done properly.
         DataStructureGenerator generator = new DataStructureGenerator(lines);
         variableRoot = generator.visit(program);
         this.dataStructureErrors = generator.getErrors();
+        endTime = System.currentTimeMillis();
+        System.out.printf("Construction of the data structure took %d ms%n", endTime - startTime);
+
+        startTime = System.currentTimeMillis();
         QualificationChecker checker = new QualificationChecker(variableRoot, lines);
         (new ParseTreeWalker()).walk(checker, program);
+        endTime = System.currentTimeMillis();
+        System.out.printf("Checking for sufficient qualification took %d ms%n", endTime - startTime);
         this.qualificationErrors = checker.getErrors();
         this.qualificationWarnings = checker.getWarnings();
 
-        // Run the pretty printer, its result should be equal to the contents of the expected file.
-        PrettyPrinter prettyPrinter = new PrettyPrinter();
-        prettyCode = prettyPrinter.process(program);
+        if (compareFiles) {
+            // Run the pretty printer, its result should be equal to the contents of the expected file.
+            PrettyPrinter prettyPrinter = new PrettyPrinter();
+            prettyCode = prettyPrinter.process(program);
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(expected))) {
-            String expectedCode = reader.lines().collect(Collectors.joining("\r\n"));
-            assertEquals(expectedCode, prettyCode, "The code produced by the pretty printer is not equal to the expected code.");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try (BufferedReader reader = new BufferedReader(new FileReader(expected))) {
+                String expectedCode = reader.lines().collect(Collectors.joining("\r\n"));
+                assertEquals(expectedCode, prettyCode, "The code produced by the pretty printer is not equal to the expected code.");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    public void testFile(String fileName, boolean compareFiles) {
+        testFile("input/" + fileName, "expected/" + fileName, compareFiles);
+    }
+
     public void testFile(String fileName) {
-        testFile("input/" + fileName, "expected/" + fileName);
+        testFile("input/" + fileName, "expected/" + fileName, true);
     }
 
     public boolean anyErrors() {
@@ -117,14 +139,22 @@ public class ParserTest {
 
     @Test
     public void testFib() {
-        testFile("input/fib.bc", "expected/fib.bc");
+        testFile("fib.bc");
         assertFalse(anyErrors());
     }
 
     @Test
     public void testKeywords() {
-        testFile("input/keywords.bc", "expected/keywords.bc");
+        testFile("keywords.bc");
         assertFalse(anyErrors());
+    }
+
+    @Test
+    public void testProcedureNameKeyword() {
+        testFile("keywords2.bc", false);
+        assertTrue(anyErrors());
+        assertTrue(this.preProcessorErrors.isEmpty());
+        assertTrue(hasError(this.parserErrors, 6, "extraneous input"));
     }
 
     @Test

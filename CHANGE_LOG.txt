@@ -186,3 +186,15 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
   completely fixed. The regex apparently required the columns to be filled, this is no longer needed in order to
   generate a match.
 * Error messages contain the correct character positions inside a line, even if this line was continued.
+
+07-06-2022:
+* Figured out that keywords cannot be used as procedure names. This could however, if someone would really want to have
+  support for it still be achieved. By making all the grammar rules have an optional body after the first mentioned
+  keyword. Then one could later on in a listener or visitor decide if the keyword indicates a statement or procedure
+  name. Hence, this is something for future work.
+* Since we will not cover white space insignificance anyhow, removed all the fragments for individual characters and
+  changed all the tokens to just their strings.
+
+08-06-2022:
+* Added a test demonstrating that keywords cannot be used as procedure or paragraph names.
+* Each test now prints how long the pre-processor, parser, qualification checker took to execute.
