@@ -388,9 +388,9 @@ public class PrettyPrinter extends BabyCobolBaseListener {
     @Override
     public void exitMoveExpression(BabyCobolParser.MoveExpressionContext ctx) {
         if (ctx.HIGH_VALUES() != null) {
-            this.lines.put(ctx, "HIGH VALUES");
+            this.lines.put(ctx, "HIGH-VALUES");
         } else if (ctx.LOW_VALUES() != null) {
-            this.lines.put(ctx, "LOW VALUES");
+            this.lines.put(ctx, "LOW-VALUES");
         } else if (ctx.SPACES() != null) {
             this.lines.put(ctx, "SPACES");
         } else {
@@ -529,7 +529,11 @@ public class PrettyPrinter extends BabyCobolBaseListener {
 
     @Override
     public void exitProcedureName(BabyCobolParser.ProcedureNameContext ctx) {
-        this.lines.put(ctx, ctx.ID().getText().toLowerCase());
+        if (ctx.ID() != null) {
+            this.lines.put(ctx, ctx.ID().getText().toLowerCase());
+        } else {
+            this.lines.put(ctx, ctx.keywords().getText().toLowerCase());
+        }
     }
 
     @Override

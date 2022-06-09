@@ -187,4 +187,10 @@ public class ParserTest {
         assertTrue(hasError(this.qualificationWarnings, 2, "Implicit definition"));
         assertTrue(hasError(this.qualificationErrors, 2, "points to a field and not a container"));
     }
+
+    @Test
+    public void procedureNameTest() {
+        testFile("procedureName.bc");
+        assertFalse(anyErrors());
+    }
 }

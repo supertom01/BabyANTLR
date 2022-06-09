@@ -124,7 +124,7 @@ arithmeticOperator: PLUS | MINUS | TIMES_SYM | DIV | POW;
 
 atomic: atomicExpression | INTEGER | identifier | STRING;
 
-procedureName: ID;
+procedureName: ID | keywords;
 
 paragraphName: ID | keywords;
 

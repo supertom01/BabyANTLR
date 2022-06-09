@@ -1,0 +1,17 @@
+       IDENTIFICATION DIVISION.
+           Author. Tom Meulenkamp.
+       DATA DIVISION.
+           01 X PICTURE IS 9.
+       PROCEDURE DIVISION.
+      * Fails since 'if' is seen as the start of an if statement and not
+      *the name of a paragraph.
+           MOVE HIGH-VALUES TO X.
+           LOOP
+             WHILE X > 0
+             GO TO IF
+             SUBTRACT 1 FROM X
+           END.
+           STOP.
+       if.
+           DISPLAY X.
+       STOP

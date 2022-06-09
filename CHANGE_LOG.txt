@@ -203,3 +203,4 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 * During the meeting with Vadim we discovered that it is actually quite easy to use keywords as paragraph names. This
   has now been implemented. Next I'll have a look at also being able to call these names in an unambiguous manner. And
   of course write some test cases for it.
+* Procedure names can also now consist of a keyword name.

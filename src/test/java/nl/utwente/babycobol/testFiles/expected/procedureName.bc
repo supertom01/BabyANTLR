@@ -1,0 +1,12 @@
+       IDENTIFICATION DIVISION.
+           Author. Tom Meulenkamp.
+       DATA DIVISION.
+           01 x PICTURE IS 9.
+       PROCEDURE DIVISION.
+           MOVE HIGH-VALUES TO x.
+           LOOP WHILE x > 0 GO TO if SUBTRACT 1 FROM x END.
+           STOP.
+       if.
+           DISPLAY x.
+       STOP
+
