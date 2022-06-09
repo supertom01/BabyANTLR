@@ -198,3 +198,8 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 08-06-2022:
 * Added a test demonstrating that keywords cannot be used as procedure or paragraph names.
 * Each test now prints how long the pre-processor, parser, qualification checker took to execute.
+
+09-06-2022:
+* During the meeting with Vadim we discovered that it is actually quite easy to use keywords as paragraph names. This
+  has now been implemented. Next I'll have a look at also being able to call these names in an unambiguous manner. And
+  of course write some test cases for it.

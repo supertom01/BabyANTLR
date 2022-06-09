@@ -151,10 +151,8 @@ public class ParserTest {
 
     @Test
     public void testProcedureNameKeyword() {
-        testFile("keywords2.bc", false);
-        assertTrue(anyErrors());
-        assertTrue(this.preProcessorErrors.isEmpty());
-        assertTrue(hasError(this.parserErrors, 6, "extraneous input"));
+        testFile("keywords2.bc");
+        assertFalse(anyErrors());
     }
 
     @Test

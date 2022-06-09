@@ -1,0 +1,9 @@
+       IDENTIFICATION DIVISION.
+           Author. Tom Meulenkamp.
+       DATA DIVISION.
+           01 x PICTURE IS 9.
+       PROCEDURE DIVISION.
+       if.
+           DISPLAY x.
+       STOP
+

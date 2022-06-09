@@ -126,7 +126,7 @@ atomic: atomicExpression | INTEGER | identifier | STRING;
 
 procedureName: ID;
 
-paragraphName: ID;
+paragraphName: ID | keywords;
 
 identifier: (ID | {isIdentifier()}? keywords) '(' INTEGER ')' #arrayIndexIdentifier
           | (ID | {isIdentifier()}? keywords) OF identifier   #quantifiedIdentifier

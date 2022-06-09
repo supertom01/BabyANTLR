@@ -534,7 +534,11 @@ public class PrettyPrinter extends BabyCobolBaseListener {
 
     @Override
     public void exitParagraphName(BabyCobolParser.ParagraphNameContext ctx) {
-        this.lines.put(ctx, ctx.ID().getText().toLowerCase());
+        if (ctx.ID() != null) {
+            this.lines.put(ctx, ctx.ID().getText().toLowerCase());
+        } else {
+            this.lines.put(ctx, ctx.keywords().getText().toLowerCase());
+        }
     }
 
     @Override
