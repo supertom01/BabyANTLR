@@ -1,0 +1,20 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. A.
+       DATA DIVISION.
+           01 k PICTURE IS 99.
+       PROCEDURE DIVISION.
+           PERFORM parainterrupt 3 TIMES.
+           DISPLAY "AFTER FOR LOOP PERFORM".
+           PERFORM paradisplayhello 4 TIMES.
+       paradisplayhello.
+           DISPLAY "hello".
+           DISPLAY "SECOND SENTANCE".
+       paradisplayprogram.
+           LOOP VARYING k FROM 5 TO 10 BY 1 DISPLAY k GO TO paradisplayh
+      -ello END.
+           DISPLAY "PROGRAM".
+       parainterrupt.
+           DISPLAY "GO TO EXECUTED".
+           GO TO paradisplayprogram.
+       STOP
+

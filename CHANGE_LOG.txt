@@ -231,3 +231,6 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
 14-06-2022:
 * A possible fix for the third point mentioned yesterday is to make the parser aware of the areas within the content
   area itself. A possible way on how to do this would be make use of stropping.
+
+22-06-2022:
+* Added a grammar without predicates which is used in PerformanceTest.java.

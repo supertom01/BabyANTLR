@@ -192,4 +192,22 @@ public class ParserTest {
         testFile("procedureName.bc");
         assertFalse(anyErrors());
     }
+
+    @Test
+    public void abcTest() {
+        testFile("abcFormula.bc");
+        assertFalse(anyErrors());
+    }
+
+    @Test
+    public void randomFileGroup1() {
+        testFile("testFile.bc");
+        assertFalse(anyErrors());
+    }
+
+    @Test
+    public void goToLoopParaGroup1() {
+        testFile("gotolooppara.bc");
+        assertFalse(anyErrors());
+    }
 }

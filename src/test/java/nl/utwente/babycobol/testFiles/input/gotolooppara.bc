@@ -1,0 +1,23 @@
+       iDeNtIfication DiViSiOn.
+           PROGRAM-ID. A.
+       DATA DIVISION.
+           01 K PICTURE IS 99.
+       PROCEDURE DIVISION.
+           PERFORM PARAINTERRUPT 3 TIMES.
+           DISPLAY "AFTER FOR LOOP PERFORM".
+           PERFORM PARADISPLAYHELLO 4 TIMES.
+
+           PARADISPLAYHELLO.
+              DISPLAY "hello".
+              DISPLAY "SECOND SENTANCE".
+
+           PARADISPLAYPROGRAM.
+              LOOP VARYING K FROM 5 TO 10 BY 1
+                      DISPLAY K
+                      GO TO PARADISPLAYHELLO
+                  END.
+              DISPLAY "PROGRAM".
+
+           PARAINTERRUPT.
+              DISPLAY "GO TO EXECUTED".
+              GO TO PARADISPLAYPROGRAM.

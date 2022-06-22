@@ -1,0 +1,32 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. ABC FORMULA.
+       DATA DIVISION.
+           01 a PICTURE IS 99999.
+           01 b PICTURE IS 99999.
+           01 c PICTURE IS 99999.
+           01 d PICTURE IS 99999.
+           01 temp PICTURE IS 9999.
+       PROCEDURE DIVISION.
+           DISPLAY "Enter a: ".
+           ACCEPT a.
+           DISPLAY "Enter b: ".
+           ACCEPT b.
+           DISPLAY "Enter c: ".
+           ACCEPT c.
+           PERFORM discriminant.
+           PERFORM xs.
+       discriminant.
+           MULTIPLY b BY b GIVING d.
+           MULTIPLY 4 BY a c GIVING c.
+           SUBTRACT c FROM d GIVING d.
+       xs.
+           SUBTRACT b FROM 0 GIVING b.
+           SUBTRACT d FROM b GIVING c.
+           DIVIDE c INTO a GIVING c.
+           DISPLAY "X1 = " c.
+           ADD d TO b GIVING c.
+           DIVIDE c INTO a GIVING c.
+           DISPLAY "X2 = " c.
+           STOP.
+       STOP
+

@@ -1,0 +1,26 @@
+      * A baby cobol file taken from group 1 of software evolution
+       iDeNtIfication DiViSiOn.
+           PROGRAM-ID. A.
+       DATA DIVISION.
+           01 B PICTURE IS 99.
+           01 C PICTURE IS XX.
+       PROCEDURE DIVISION.
+           PERFORM PARAC 1 TIMES.
+           PERFORM PARAC 1 TIMES.
+           PERFORM PARAC 1 TIMES.
+           PERFORM PARAC 1 TIMES.
+           PERFORM PARAC 1 TIMES.
+
+           PARAA.
+              DISPLAY "A".
+              ALTER PARAC TO PROCEED TO PARAB.
+
+           PARAB.
+              DISPLAY "B".
+              ALTER PARAC TO PROCEED TO PARAD.
+
+           PARAD.
+              DISPLAY "C".
+
+           PARAC.
+              GO TO PARAA.

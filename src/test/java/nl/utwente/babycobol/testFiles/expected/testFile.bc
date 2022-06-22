@@ -1,0 +1,23 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. A.
+       DATA DIVISION.
+           01 b PICTURE IS 99.
+           01 c PICTURE IS XX.
+       PROCEDURE DIVISION.
+           PERFORM parac 1 TIMES.
+           PERFORM parac 1 TIMES.
+           PERFORM parac 1 TIMES.
+           PERFORM parac 1 TIMES.
+           PERFORM parac 1 TIMES.
+       paraa.
+           DISPLAY "A".
+           ALTER parac TO PROCEED TO parab.
+       parab.
+           DISPLAY "B".
+           ALTER parac TO PROCEED TO parad.
+       parad.
+           DISPLAY "C".
+       parac.
+           GO TO paraa.
+       STOP
+
