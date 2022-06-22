@@ -103,7 +103,7 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
             }
             code = builder.toString();
         } catch (FileNotFoundException e) {
-            try (FileReader reader2 = new FileReader(this.workingDirectory + "\\"+ fileName)) {
+            try (FileReader reader2 = new FileReader(this.workingDirectory + "/"+ fileName)) {
                 BufferedReader buffer = new BufferedReader(reader2);
                 StringBuilder builder = new StringBuilder();
                 String line;
