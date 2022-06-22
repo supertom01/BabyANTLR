@@ -72,7 +72,7 @@ public class ParserTest {
         this.parserErrors = errorListener.getErrors();
         program = parser.program();
         endTime = System.currentTimeMillis();
-        System.out.printf("Parsing took %d ms%n", endTime - startTime);
+        System.out.printf("Parsing took %d ms (%.3f lines per ms)%n", endTime - startTime, lines.size() / ((double) (endTime - startTime)));
 
         startTime = System.currentTimeMillis();
         // Check if sufficient qualification has been done properly.

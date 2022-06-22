@@ -2,3 +2,4 @@
 tab_width = 2
 max_line_length = 73
 ij_visual_guides = 6,7,11,72
+end_of_line = lf
