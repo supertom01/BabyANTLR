@@ -38,11 +38,11 @@ public class Parser {
 
     public List<Line> preProcess(File sourceFile) throws IOException {
         PreProcessor preProcessor = new PreProcessor(sourceFile);
-        preProcessor.process();
+        List<Line> lines = preProcessor.process();
         for (String error : preProcessor.getErrors()) {
             System.err.println(error);
         }
-        return preProcessor.getLines();
+        return lines;
     }
 
     public ParseTree parse(List<Line> lines) {

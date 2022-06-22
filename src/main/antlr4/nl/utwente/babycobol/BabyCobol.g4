@@ -54,7 +54,7 @@ statement: {!isIdentifier()}? ACCEPT identifier+                                
          | {!isIdentifier()}? IF booleanExpression thenExpression elseExpression? END?                 #IfStatement
          | {!isIdentifier()}? LOOP loopBody+ END                                                       #LoopStatement
          | {!isIdentifier()}? MOVE moveExpression TO identifier+                                       #MoveStatement
-         | {!isIdentifier()}? NEXT SENTENCE                                                            #NextSentenceStatement
+         | {!isIdentifier()}? NEXT_SENTENCE                                                            #NextSentenceStatement
          | {!isIdentifier()}? PERFORM procedureName (THROUGH procedureName)? (atomic TIMES)?           #PerformStatement
          | {!isIdentifier()}? SIGNAL (OFF | procedureName) ON_ERROR                                    #SignalStatement
          | {!isIdentifier()}? STOP                                                                     #StopStatement
@@ -135,8 +135,8 @@ identifier: (ID | {isIdentifier()}? keywords) '(' INTEGER ')' #arrayIndexIdentif
 
 keywords: ACCEPT | ADD | ALTER | DISPLAY | DIVIDE | EVALUATE | IF | LOOP | MOVE | MULTIPLY | PERFORM | SIGNAL
         | STOP | PICTURE | OCCURS | LIKE | WITH_NO_ADVANCING | AND | BY | DELIMITED_BY | ELSE | END | ON_ERROR
-        | FALSE | FROM | GIVING | GO_TO | HIGH_VALUES | IS | INTO | LOW_VALUES | NEXT | NOT | OF | OFF | OR | OTHER
-        | TO_PROCEED_TO | REMAINDER | SENTENCE | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
+        | FALSE | FROM | GIVING | GO_TO | HIGH_VALUES | IS | INTO | LOW_VALUES | NEXT_SENTENCE | NOT | OF | OFF | OR
+        | OTHER | TO_PROCEED_TO | REMAINDER | SIZE | SPACE | SPACES | SUBTRACT | THEN | THROUGH | TIMES
         | TO | TRUE | UNTIL | VARYING | WHEN | WHILE | XOR
         ;
 
@@ -159,9 +159,6 @@ DIV: '/';
 POW: '**';
 COPY_QUOTE: '===';
 FILENAME: ALPHANUM+ '.' ALPHANUM+;
-
-// Fragments
-fragment ALPHANUM: (CHAR | [0-9]);
 
 STRING: '"' ~'"'* '"';
 
@@ -196,7 +193,7 @@ HIGH_VALUES: 'HIGH-VALUES';
 IS:         'IS';
 INTO:       'INTO';
 LOW_VALUES: 'LOW-VALUES';
-NEXT:       'NEXT';
+NEXT_SENTENCE: 'NEXT SENTENCE';
 NOT:        'NOT';
 OFF:        'OFF';
 OF:         'OF';
@@ -204,7 +201,6 @@ ON_ERROR:   'ON ERROR';
 OR:         'OR';
 OTHER:      'OTHER';
 REMAINDER:  'REMAINDER';
-SENTENCE:   'SENTENCE';
 SIZE:       'SIZE';
 SPACES:     'SPACES';
 SPACE:      'SPACE';
@@ -222,21 +218,18 @@ WHILE:      'WHILE';
 WITH_NO_ADVANCING: 'WITH NO ADVANCING';
 XOR:        'XOR';
 
-IDENTIFICATION_DIVISION: IDENTIFICATION ' ' DIVISION;
-DATA_DIVISION: DATA ' ' DIVISION;
-PROCEDURE_DIVISION: PROCEDURE ' ' DIVISION;
+IDENTIFICATION_DIVISION: 'IDENTIFICATION DIVISION';
+DATA_DIVISION: 'DATA DIVISION';
+PROCEDURE_DIVISION: 'PROCEDURE DIVISION';
 
 ID: (CHAR | '-') (CHAR | INT | '-')*;
 INTEGER: INT+;
 
+// Skipped and ignored tokens
 WS: [ \t\r\n]+ -> skip;
 IGNORED: .;
 
+// Fragments
+fragment ALPHANUM: (CHAR | [0-9]);
 fragment CHAR: [A-Z];
-
-fragment DATA: 'DATA';
-fragment DIVISION: 'DIVISION';
-fragment PROCEDURE: 'PROCEDURE';
-fragment IDENTIFICATION: 'IDENTIFICATION';
-
 fragment INT: [0-9];

@@ -124,11 +124,10 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
 
         // Also put this code through the pre-processor.
         PreProcessor preProcessor = new PreProcessor(code, fileName);
-        preProcessor.process();
+        List<Line> lines = preProcessor.process();
         if (preProcessor.hasErrors()) {
             this.errors.addAll(preProcessor.getErrors());
         }
-        List<Line> lines = preProcessor.getLines();
 
         // We have to replace values in the file that we've gotten.
         if (ctx.REPLACING() != null) {

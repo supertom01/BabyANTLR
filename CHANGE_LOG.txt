@@ -12,7 +12,7 @@
       -> Eventually not necessary, but switched to a recursive grammar rule, which switches between arbitrary values.
          Really not a nice implementation but it works.
 
-* Add support for quantification (FOR)
+* Add support for sufficient qualification (FOR)
 * Ability to fully parse (without any errors) the simple fib file.
 * Add labels to grammar rules with multiple RHSs.
 * Started working on a quick-and-dirty pretty-print program.
@@ -204,3 +204,30 @@ Where X is parsed as a label "X" and not skipped over or parsed as "  X"
   has now been implemented. Next I'll have a look at also being able to call these names in an unambiguous manner. And
   of course write some test cases for it.
 * Procedure names can also now consist of a keyword name.
+
+13-06-2022:
+* TODO: Apparently I do not yet check if a variable is already defined or not.
+* TODO: Is it actually possible to define an empty container.
+  -> This is not desired right? -> Ask Vadim
+* FIXME: The keyword STOP is not always properly recognized as a paragraph name, even though it is intended to be one.
+         This makes sense since stop always only occurs on its own and hence cannot quickly be disambiguated. This could
+         be fixed by making the parser explicitly aware of the area A and B. Since currently this is just being ignored.
+  -> Test case:
+         IDENTIFICATION DIVISION.
+             T. T.
+         DATA DIVISION.
+             01 If PICTURE IS X.
+             01 ELSe PICTURE IS 9.
+             01 then PICTURE IS V.
+         PROCEDURE DIVISION.
+        * The line below should indicate a paragraph name, but instead it is recognized as a statement.
+         STOP.
+             IF if = then THEN DISPLAY then ELSE DISPLAY if END.
+             STOP.
+         MOVE.
+             ACCEPT if.
+         STOP
+
+14-06-2022:
+* A possible fix for the third point mentioned yesterday is to make the parser aware of the areas within the content
+  area itself. A possible way on how to do this would be make use of stropping.

@@ -62,11 +62,7 @@ public class PreProcessor {
         //  8-12 : Section A
         // 13-72 : Section B
         // 73+   : Ignored
-        this.linePattern = Pattern.compile("(.{0,6})(.)(.{0,4})(.{0,61})(.*)");
-    }
-
-    public List<Line> getLines() {
-        return this.lines;
+        this.linePattern = Pattern.compile("(.{0,6})(.?)(.{0,4})(.{0,61})(.*)");
     }
 
     public boolean hasErrors() {
@@ -116,12 +112,16 @@ public class PreProcessor {
      *
      * It also merges continued lines into a single line, while preserving the original line numbers.
      */
-    public void process() {
+    public List<Line> process() {
         for (int i = 0; i < this.source_code.length; i++) {
             Matcher matcher = this.linePattern.matcher(this.source_code[i]);
             if (matcher.matches()) {
                 Line line = new Line(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4),
                     matcher.group(5), i + 1, this.fileName);
+
+                if (line.contentArea().replace(" ", "").length() == 0) {
+                    continue;
+                }
 
                 switch (line.getLineType()) {
                     case COMMENT -> {}
@@ -146,5 +146,7 @@ public class PreProcessor {
                 this.lines.addAll(i, copyLines);
             }
         }
+
+        return this.lines;
     }
 }

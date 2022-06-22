@@ -49,9 +49,8 @@ public class ParserTest {
         // Run the pre-processor
         try {
             PreProcessor preProcessor = new PreProcessor(input);
-            preProcessor.process();
+            lines = preProcessor.process();
             this.preProcessorErrors = preProcessor.getErrors();
-            lines = preProcessor.getLines();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

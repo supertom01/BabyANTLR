@@ -5,8 +5,6 @@
 
 package nl.utwente.babycobol.preprocessor;
 
-import java.util.Arrays;
-
 /**
  * Represents a single BabyCobol line.
  */
@@ -131,16 +129,11 @@ public class Line {
 
     /**
      * Returns a cleaned string, with a consistent sequence section.
-     * TODO: How do we give a nice warning?!
      */
     public String getClean() {
         String line;
-        if (this.sectionA().length() == 0 || this.sectionA().charAt(0) == ' ') {
+        if (this.sectionA().length() == 0) {
             line = " ".repeat(6) + this.indicator + " ".repeat(4) + this.sectionB();
-            if (this.sectionA().replaceAll(" ", "").length() != 0) {
-                System.err.printf("Warning: line %s sectionA \"%s\" was wiped, due to starting with a space %n",
-                        Arrays.toString(this.getLineNumbers()), this.sectionA());
-            }
         } else {
             line = " ".repeat(6) + this.indicator + this.contentArea();
         }
