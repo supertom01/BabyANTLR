@@ -96,7 +96,7 @@ public class ParserTest {
             prettyCode = prettyPrinter.process(program);
 
             try (BufferedReader reader = new BufferedReader(new FileReader(expected))) {
-                String expectedCode = reader.lines().collect(Collectors.joining("\r\n"));
+                String expectedCode = reader.lines().collect(Collectors.joining(System.lineSeparator()));
                 assertEquals(expectedCode, prettyCode, "The code produced by the pretty printer is not equal to the expected code.");
             } catch (IOException e) {
                 throw new RuntimeException(e);
