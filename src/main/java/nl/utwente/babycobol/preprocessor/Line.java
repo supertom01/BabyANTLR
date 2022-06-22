@@ -137,7 +137,7 @@ public class Line {
         } else {
             line = " ".repeat(6) + this.indicator + this.contentArea();
         }
-        line += "\r\n";
+        line += System.lineSeparator();
         return line;
     }
 

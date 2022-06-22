@@ -99,7 +99,7 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
             StringBuilder builder = new StringBuilder();
             String line;
             while ((line = buffer.readLine()) != null) {
-                builder.append(line).append("\r\n");
+                builder.append(line).append(System.lineSeparator());
             }
             code = builder.toString();
         } catch (FileNotFoundException e) {
@@ -108,7 +108,7 @@ public class CopyStatement extends BabyCobolPreProcessorBaseListener {
                 StringBuilder builder = new StringBuilder();
                 String line;
                 while ((line = buffer.readLine()) != null) {
-                    builder.append(line).append("\r\n");
+                    builder.append(line).append(System.lineSeparator());
                 }
                 code = builder.toString();
             } catch (IOException ioException) {
