@@ -31,9 +31,9 @@ public boolean isIdentifier() {
 
 program: identificationDivision (dataDivision)? (procedureDivision)?;
 
-identificationDivision: IDENTIFICATION_DIVISION '.' (identificationDeclaration '.' identificationDeclaration '.')+;
+identificationDivision: IDENTIFICATION_DIVISION '.' (identificationDeclaration '.' identificationDeclaration '.')+?;
 
-identificationDeclaration: ~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+;
+identificationDeclaration: ~('.')+;
 
 dataDivision: DATA_DIVISION '.' (declaration '.')+;
 
