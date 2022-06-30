@@ -1,0 +1,8 @@
+        iDeNtIfication DiViSiOn.
+            PROGRAM-ID. A.
+        DATA DIVISION.
+            01 L PICTURE IS 99.
+            01 M PICTURE IS 9.
+            01 K PICTURE IS 9.
+        PROCEDURE DIVISION.
+            MOVE 10 TO L.

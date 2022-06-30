@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ParserTest {
 
-    public static String SOURCE_DIR = System.getProperty("user.dir") + "/src/test/java/nl/utwente/babycobol/testFiles/";
+    public static String SOURCE_DIR = System.getProperty("user.dir") + "/src/test/resources/";
 
     private List<String> preProcessorErrors;
     private List<String> parserErrors;

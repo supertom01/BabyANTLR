@@ -33,7 +33,7 @@ program: identificationDivision (dataDivision)? (procedureDivision)?;
 
 identificationDivision: IDENTIFICATION_DIVISION '.' (identificationDeclaration '.' identificationDeclaration '.')+?;
 
-identificationDeclaration: ~('.')+;
+identificationDeclaration: ~('.' | DATA_DIVISION | PROCEDURE_DIVISION)+;
 
 dataDivision: DATA_DIVISION '.' (declaration '.')+;
 

@@ -1,0 +1,16 @@
+        iDeNtIfication DiViSiOn.
+            PROGRAM-ID. A.
+        DATA DIVISION.
+            01 B PICTURE IS 99.
+            01 C PICTURE IS XX.
+        PROCEDURE DIVISION.
+            PERFORM PARADISPLAYHELLO 3 TIMES.
+            PERFORM PARADISPLAYPROGRAM 3 TIMES.
+            PERFORM PARADISPLAYHELLO THROUGH PARADISPLAYPROGRAM 3 TIMES.
+
+            PARADISPLAYHELLO.
+                DISPLAY "hello".
+                DISPLAY "SECOND SENTANCE".
+
+            PARADISPLAYPROGRAM.
+                DISPLAY "PROGRAM".
