@@ -20,6 +20,9 @@ difficulties. Sounds easy, right? Well, perhaps all this talk about BabyCobol be
 2. With `mvn package` the tests are executed and a JAR file will be packaged. 
 3. This JAR can then be used to run the parser over source files.
 
+# Thesis
+The final thesis itself be found on [essay.utwente.nl](https://essay.utwente.nl/91706/)
+
 # BabyCobol Language
 Beneath one will find a quick and very brief language reference of the BabyCobol language.
 
